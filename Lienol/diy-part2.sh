@@ -19,6 +19,3 @@ sed -i 's/kmod-nft-offload/luci-app-turboacc/g' include/target.mk
 
 # 修改Makefile
 sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.15/g' target/linux/x86/Makefile
-
-# 取消Lean大登陆密码
-sed -i 's/^\(.*99999\)/#&/' package/lean/default-settings/files/zzz-default-settings
