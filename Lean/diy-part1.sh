@@ -22,7 +22,7 @@ rm -rf target/linux/x86/Makefile
 # 下载新的target.mk
 wget -P /target/linux/x86 https://github.com/x-wrt/x-wrt/raw/master/target/linux/x86/Makefile
 
-# 注释掉lienol大diy1源
+# 注释掉默认luci源
 sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 
 # 添加第三方luci源
