@@ -10,23 +10,17 @@
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
 
-# 回退源码
-#git reset --hard 52c8a13
+# 删除原版target.mk
+rm -rf include/target.mk
 
-# Uncomment a feed source
-#sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
+# 下载新的target.mk
+wget -P /include https://github.com/x-wrt/x-wrt/raw/master/include/target.mk
 
-# Add a feed source
-#sed -i '$a src-git lienol https://github.com/Lienol/openwrt-package' feeds.conf.default
+# 删除原版target.mk
+rm -rf target/linux/x86/Makefile
 
-# 取消helloworld源注释（ssr-plus）
-#sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
+# 下载新的target.mk
+wget -P /target/linux/x86 https://github.com/x-wrt/x-wrt/raw/master/target/linux/x86/Makefile
 
-# 添加xiaorouji大passwall源
-#sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main' feeds.conf.default
-
-# 注释掉lean大默认packages源
-#sed -i 's/^\(.*packages\)/#&/' feeds.conf.default
-
-# 添加softethervpn升级的packages源
-#sed -i '$a src-git packages https://github.com/lxhao61/packages.git' feeds.conf.default
+# 添加第三方插件源
+sed -i '$a src-git Boos4721 https://github.com/Boos4721/OpenWrt-Packages.git' feeds.conf.default
