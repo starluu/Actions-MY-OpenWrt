@@ -29,4 +29,4 @@ sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 sed -i '$a src-git guyezi https://github.com/guyezi/hello-luci.git' feeds.conf.default
 
 # 添加第三方插件源
-sed -i '$a src-git Boos4721 https://github.com/Boos4721/OpenWrt-Packages.git' feeds.conf.default
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
