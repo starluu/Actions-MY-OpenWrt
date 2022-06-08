@@ -22,5 +22,11 @@ rm -rf target/linux/x86/Makefile
 # 下载新的target.mk
 wget -P /target/linux/x86 https://github.com/x-wrt/x-wrt/raw/master/target/linux/x86/Makefile
 
+# 注释掉lienol大diy1源
+sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
+
+# 添加第三方luci源
+sed -i '$a src-git guyezi https://github.com/guyezi/hello-luci.git' feeds.conf.default
+
 # 添加第三方插件源
 sed -i '$a src-git Boos4721 https://github.com/Boos4721/OpenWrt-Packages.git' feeds.conf.default
