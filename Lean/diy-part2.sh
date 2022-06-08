@@ -15,12 +15,10 @@
 
 # 修改target.mk
 sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
+sed -i 's/kmod-nft-offload/luci-app-turboacc/g' include/target.mk
 
 # 修改Makefile
 sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.15/g' target/linux/x86/Makefile
-
-# 修改Makefile
-sed -i 's/LUCI_DEPENDS:=+uci-firewall/LUCI_DEPENDS:=+firewall/g' feeds/lienol/luci-app-firewall/Makefile
 
 # 取消Lean大登陆密码
 sed -i 's/^\(.*99999\)/#&/' package/lean/default-settings/files/zzz-default-settings
