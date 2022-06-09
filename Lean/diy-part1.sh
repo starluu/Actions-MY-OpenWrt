@@ -21,3 +21,6 @@ rm -rf target/linux/x86/Makefile
 
 # 下载新的Makefile
 wget -P target/linux/x86 https://github.com/x-wrt/x-wrt/raw/master/target/linux/x86/Makefile
+
+# 添加第三方插件源
+sed -i '$a src-git kenzok8 https://github.com/kenzok8/small-package.git' feeds.conf.default
