@@ -29,4 +29,4 @@ sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 sed -i '$a src-git luci2 https://github.com/guyezi/hello-luci.git' feeds.conf.default
 
 # 添加第三方插件源
-sed -i '$a src-git kenzok8 https://github.com/kenzok8/jell.git' feeds.conf.default
+sed -i '$a src-git kenzok8 https://github.com/kenzok8/small-package.git' feeds.conf.default
