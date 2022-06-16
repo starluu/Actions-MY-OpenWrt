@@ -121,7 +121,7 @@ jobs:
         name: Lienol_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-   - name: Upload SquashFS Image
+    - name: Upload SquashFS Image
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
       with:
