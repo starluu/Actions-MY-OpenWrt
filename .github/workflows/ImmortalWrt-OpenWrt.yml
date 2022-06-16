@@ -125,15 +125,15 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
       with:
-        name: ${{ env.DEVICE }}-squashfs-combined.img.gz
-        path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.DEVICE }}-squashfs-combined.img.gz
+        name: ImmortalWrt-squashfs-combined.img.gz
+        path: openwrt/bin/targets/*/*/*-squashfs-combined.img.gz
         
     - name: Upload SquashFS Image
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
       with:
-        name: ${{ env.DEVICE }}-squashfs-combined-efi.img.gz
-        path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.DEVICE }}-squashfs-combined-efi.img.gz
+        name: ImmortalWrt-squashfs-combined-efi.img.gz
+        path: openwrt/bin/targets/*/*/*-squashfs-combined-efi.img.gz
         
     - name: Organize files
       id: organize
