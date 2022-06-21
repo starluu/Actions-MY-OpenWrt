@@ -14,4 +14,4 @@
 sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
 
 # 添加alist源
-sed -i '$a src-git alist https://github.com/sbwml/openwrt-alist.git' feeds.conf.default
+sed -i '$a src-git aliyundrive https://github.com/messense/aliyundrive-webdav.git' feeds.conf.default
