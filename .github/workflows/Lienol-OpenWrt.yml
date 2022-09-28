@@ -57,7 +57,7 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
         df -hT
-        
+
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
