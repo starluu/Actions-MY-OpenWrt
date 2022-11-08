@@ -15,6 +15,3 @@
 
 # 修改target.mk
 sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
-
-# 修改Makefile
-sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.15/g' target/linux/x86/Makefile
