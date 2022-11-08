@@ -12,7 +12,7 @@
 
 # 更换 golang 版本
 rm -rf feeds/packages/lang/golang
-svn export https://github.com/sbwml/packages_lang_golang/trunk feeds/packages/lang/golang
+svn export https://github.com/sbwml/packages_lang_golang/branches/19.x feeds/packages/lang/golang
 
 # 添加passwall2源
 sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
