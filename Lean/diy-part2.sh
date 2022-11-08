@@ -15,7 +15,6 @@
 
 # 修改target.mk
 sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
-sed -i 's/kmod-nft-offload/luci-app-turboacc/g' include/target.mk
 
 # 修改Makefile
-sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.19/g' target/linux/x86/Makefile
+sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=6.0/g' target/linux/x86/Makefile
