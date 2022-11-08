@@ -27,3 +27,6 @@ rm -rf feeds/packages/lang/golang
 
 # 添加第三方插件源
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
+
+# 添加Alist支持
+sed -i '$a src-git kiddin9 https://github.com/sbwml/packages_lang_golang.git' feeds.conf.default
