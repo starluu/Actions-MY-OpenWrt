@@ -22,5 +22,8 @@ rm -rf target/linux/x86/Makefile
 # 下载新的Makefile
 wget -P target/linux/x86 https://github.com/x-wrt/x-wrt/raw/master/target/linux/x86/Makefile
 
+# 删除原版golang
+rm -rf feeds/packages/lang/golang
+
 # 添加第三方插件源
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
