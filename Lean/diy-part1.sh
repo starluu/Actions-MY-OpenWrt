@@ -23,7 +23,7 @@ rm -rf target/linux/x86/Makefile
 wget -P target/linux/x86 https://github.com/x-wrt/x-wrt/raw/master/target/linux/x86/Makefile
 
 # 注销原版luci
-#sed -i 's/^#\(.*luci\)/\1/' feeds.conf.default
+sed -i 's/^#\(.*luci\)/\1/' feeds.conf.default
 
 # 添加第三方luci源
 sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git;master' feeds.conf.default
