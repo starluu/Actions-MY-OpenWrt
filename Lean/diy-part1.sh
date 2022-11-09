@@ -22,9 +22,6 @@ rm -rf target/linux/x86/Makefile
 # 下载新的Makefile
 wget -P target/linux/x86 https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lean/Makefile
 
-# 删除原版golang
-rm -rf feeds/packages/lang/golang
-
 # 注销原版luci
 sed -i 's/^[^#].*luci$/#&/g' feeds.conf.default
 
