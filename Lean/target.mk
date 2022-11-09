@@ -43,7 +43,7 @@ DEFAULT_PACKAGES.nas:=\
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full firewall iptables ppp ppp-mod-pppoe \
 	block-mount coremark kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw kmod-tun \
-	iptables-mod-tproxy iptables-mod-extra ipset ip-full default-settings luci luci-newapi luci-compat \
+	iptables-mod-tproxy iptables-mod-extra ipset ip-full luci luci-newapi luci-compat \
 
 ifneq ($(DUMP),)
   all: dumpinfo
