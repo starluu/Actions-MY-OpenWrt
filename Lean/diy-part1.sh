@@ -14,13 +14,13 @@
 rm -rf include/target.mk
 
 # 下载新的target.mk
-wget -P include https://github.com/immortalwrt/immortalwrt/raw/master/include/target.mk
+wget -P include https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lean/target.mk
 
 # 删除原版Makefile
 rm -rf target/linux/x86/Makefile
 
 # 下载新的Makefile
-wget -P target/linux/x86 https://github.com/immortalwrt/immortalwrt/raw/master/target/linux/x86/Makefile
+wget -P target/linux/x86 https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lean/Makefile
 
 # 注销原版luci
 sed -i 's/^[^#].*luci$/#&/g' feeds.conf.default
