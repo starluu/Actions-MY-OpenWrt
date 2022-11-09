@@ -10,8 +10,6 @@
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
 
-# 删除原版golang
-rm -rf feeds/packages/lang/golang
 
 # 添加passwall2源
 sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
