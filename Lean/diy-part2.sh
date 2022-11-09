@@ -13,6 +13,6 @@
 # Modify default IP
 # sed -i 's/192.168.1.1/192.168.1.6/g' package/base-files/files/bin/config_generate
 
-# 删除原版golang
+# 删除原版golang添加Alist支持
 rm -rf feeds/packages/lang/golang
 svn export https://github.com/sbwml/packages_lang_golang/branches/19.x feeds/packages/lang/golang
