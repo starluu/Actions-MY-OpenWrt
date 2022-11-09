@@ -13,5 +13,5 @@
 # Modify default IP
 # sed -i 's/192.168.1.1/192.168.1.6/g' package/base-files/files/bin/config_generate
 
-# 修改Makefile
-# sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=6.0/g' target/linux/x86/Makefile
+# 删除原版golang
+rm -rf feeds/packages/lang/golang
