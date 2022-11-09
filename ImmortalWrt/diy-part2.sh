@@ -21,3 +21,4 @@ sed -i 's/^\(.*99999\)/#&/' package/emortal/default-settings/files/99-default-se
 
 # 删除原版golang
 rm -rf feeds/packages/lang/golang
+svn export https://github.com/sbwml/packages_lang_golang/branches/19.x feeds/packages/lang/golang
