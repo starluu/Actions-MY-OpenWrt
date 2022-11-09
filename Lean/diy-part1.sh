@@ -26,4 +26,4 @@ wget -P target/linux/x86 https://github.com/starluu/Actions-MY-OpenWrt/raw/main/
 sed -i 's/^[^#].*luci$/#&/g' feeds.conf.default
 
 # 添加第三方luci源
-sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git;master' feeds.conf.default
+sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git;21.02' feeds.conf.default
