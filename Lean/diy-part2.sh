@@ -10,8 +10,8 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# Modify default IP
-# sed -i 's/192.168.1.1/192.168.1.6/g' package/base-files/files/bin/config_generate
+# Modify default firewall
+sed -i 's/LUCI_DEPENDS:=+uci-firewall/LUCI_DEPENDS:=+firewall/g' package/feeds/luci/luci-app-firewall/makefile
 
 # 删除原版golang添加Alist支持
 rm -rf feeds/packages/lang/golang
