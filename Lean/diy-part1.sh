@@ -22,7 +22,11 @@ rm -rf target/linux/x86/Makefile
 # 下载新的Makefile
 wget -P target/linux/x86 https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lean/Makefile
 
-# 添加第三方插件源# 取消Immortal大登陆密码
+# 取消原版luci
 sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 
+# 添加第三方插件源
+sed -i '$a src-git luci https://github.com/Boos4721/luci.git' feeds.conf.default
+
+# 添加第三方插件源
 sed -i '$a src-git kenzok8 https://github.com/kenzok8/small-package.git' feeds.conf.default
