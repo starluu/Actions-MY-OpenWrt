@@ -25,7 +25,7 @@ wget -P target/linux/x86 https://github.com/starluu/Actions-MY-OpenWrt/raw/main/
 # 取消原版luci
 sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 
-# 添加第三方插件源
+# 添加第三方luci源
 sed -i '$a src-git luci https://github.com/Boos4721/luci.git' feeds.conf.default
 
 # 添加第三方插件源
