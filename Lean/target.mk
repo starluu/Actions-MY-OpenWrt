@@ -41,9 +41,16 @@ DEFAULT_PACKAGES.nas:=\
 	mdadm
 # For router targets
 DEFAULT_PACKAGES.router:=\
-	dnsmasq-full firewall iptables ppp ppp-mod-pppoe \
-	block-mount coremark kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw kmod-tun \
-	iptables-mod-tproxy iptables-mod-extra ipset ip-full luci luci-newapi luci-compat \
+	dnsmasq \
+	firewall4 \
+	nftables \
+	odhcp6c \
+	odhcpd-ipv6only \
+	ppp \
+	ppp-mod-pppoe \
+	block-mount \
+	luci \
+	luci-compat
 
 ifneq ($(DUMP),)
   all: dumpinfo
