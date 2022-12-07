@@ -29,7 +29,7 @@ sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 sed -i '$a src-git luci https://github.com/immortalwrt/luci.git;openwrt-21.02' feeds.conf.default
 
 # 添加passwall2源
-sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
+sed -i '$a src-git passwall2 https://github.com/smallprogram/openwrt-passwall2.git' feeds.conf.default
 
 # 添加alist源
 sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf.default
