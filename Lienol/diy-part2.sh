@@ -15,3 +15,7 @@
 
 # 修改target.mk
 sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
+
+# 删除原版golang添加Alist支持
+rm -rf feeds/packages/lang/golang
+svn export https://github.com/sbwml/packages_lang_golang/trunk feeds/packages/lang/golang
