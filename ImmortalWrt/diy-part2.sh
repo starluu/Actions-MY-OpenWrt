@@ -16,7 +16,7 @@
 # Modify default HostName
 sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
 
-# 取消Immortal大登陆密码
+# 修改Kernel版本
 sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=6.1/g' target/linux/x86/Makefile
 
 # 删除原版golang添加Alist支持
