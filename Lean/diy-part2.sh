@@ -12,10 +12,9 @@
 
 
 # 添加第三方插件
-mkdir package/lc-sub
-pushd package/lc-sub
-svn co https://github.com/NueXini/NueXini_Packages/branches/main/luci-app-vsftpd
-svn co https://github.com/NueXini/NueXini_Packages/branches/main/luci-app-diskman
+pushd package/lean
+svn co https://github.com/immortalwrt/luci/branches/openwrt-18.06/applications/luci-app-vsftpd
+svn co https://github.com/immortalwrt/luci/branches/openwrt-18.06/applications/luci-app-diskman
 
 # 删除原版golang添加Alist支持
 rm -rf feeds/packages/lang/golang
