@@ -26,10 +26,7 @@ wget -P target/linux/x86 https://github.com/starluu/Actions-MY-OpenWrt/raw/main/
 sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 
 # 添加第三方luci源
-sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git' feeds.conf.default
+sed -i '$a src-git luci https://github.com/ikghx/luci.git;openwrt-21.02' feeds.conf.default
 
-# 添加passwall2源
-sed -i '$a src-git passwall2 https://github.com/smallprogram/openwrt-passwall2.git' feeds.conf.default
-
-# 添加alist源
-sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf.default
+# 添加第三方插件源
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
