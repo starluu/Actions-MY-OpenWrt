@@ -13,8 +13,8 @@
 
 # 添加第三方插件
 pushd package/lean
-svn co https://github.com/immortalwrt/luci/branches/openwrt-18.06/applications/luci-app-vsftpd
-svn co https://github.com/immortalwrt/luci/branches/openwrt-18.06/applications/luci-app-diskman
+svn co https://github.com/immortalwrt/luci/branches/openwrt-21.02/applications/luci-app-vsftpd
+svn co https://github.com/immortalwrt/luci/branches/openwrt-21.02/applications/luci-app-diskman
 
 # 删除原版golang添加Alist支持
 rm -rf feeds/packages/lang/golang
