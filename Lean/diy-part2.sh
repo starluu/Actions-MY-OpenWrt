@@ -12,6 +12,3 @@
 # 删除原版golang添加Alist支持
 rm -rf feeds/packages/lang/golang
 svn export https://github.com/sbwml/packages_lang_golang/trunk feeds/packages/lang/golang
-
-# 添加luci-app-vsftpd
-svn export https://github.com/NueXini/NueXini_Packages/trunk/luci-app-vsftpd feeds/luci/applications/lang/luci-app-vsftpd
