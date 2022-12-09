@@ -34,3 +34,7 @@ sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf
 # 添加passwall2源
 sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall.git' feeds.conf.default
 sed -i '$a src-git passwall2 https://github.com/smallprogram/openwrt-passwall2.git' feeds.conf.default
+
+# 添加第三方插件
+svn export https://github.com/NueXini/NueXini_Packages/trunk/luci-app-vsftpd feeds/luci/applications/luci-app-vsftpd
+svn export https://github.com/NueXini/NueXini_Packages/trunk/luci-app-diskman feeds/luci/applications/luci-app-diskman
