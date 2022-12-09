@@ -31,9 +31,9 @@ sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git' feeds.conf.d
 # 添加alist源
 sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf.default
 
-# 添加diskman源
-sed -i '$a src-git diskman https://github.com/lisaac/luci-app-diskman.git' feeds.conf.default
-
 # 添加passwall2源
 sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall.git' feeds.conf.default
 sed -i '$a src-git passwall2 https://github.com/smallprogram/openwrt-passwall2.git' feeds.conf.default
+
+# 添加第三方插件源
+sed -i '$a src-git other https://github.com/Lienol/openwrt-package.git;other' feeds.conf.default
