@@ -36,4 +36,4 @@ sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall.git' f
 sed -i '$a src-git passwall2 https://github.com/smallprogram/openwrt-passwall2.git' feeds.conf.default
 
 # 添加第三方插件源
-sed -i '$a src-git other https://github.com/zxlhhyccc/bf-package-master.git' feeds.conf.default
+sed -i '$a src-git other https://github.com/Lienol/openwrt-package.git;other' feeds.conf.default
