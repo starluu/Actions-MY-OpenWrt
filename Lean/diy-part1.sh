@@ -33,7 +33,7 @@ sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf
 
 # 添加passwall2源
 sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall.git' feeds.conf.default
-sed -i '$a src-git passwall2 https://github.com/smallprogram/openwrt-passwall2.git' feeds.conf.default
+sed -i '$a src-git passwall2 https://github.com/lededev/openwrt-passwall2.git;s3' feeds.conf.default
 
 # 添加第三方插件源
 sed -i '$a src-git other https://github.com/Lienol/openwrt-package.git;other' feeds.conf.default
