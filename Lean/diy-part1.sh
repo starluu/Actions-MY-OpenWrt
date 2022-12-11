@@ -28,4 +28,4 @@ sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git' feeds.conf.default
 
 # 添加第三方插件源
-sed -i '$a src-git NueXini_Packages https://github.com/NueXini/NueXini_Packages.git' feeds.conf.default
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
