@@ -9,7 +9,6 @@
 # File name: diy-part1.sh
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
-
 # 删除原版target.mk
 rm -rf include/target.mk
 
