@@ -14,7 +14,7 @@
 rm -rf include/target.mk
 
 # 下载新的target.mk
-wget -P include https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lean/target.mk
+wget -P include https://github.com/immortalwrt/immortalwrt/raw/master/include/target.mk
 
 # 删除原版Makefile
 rm -rf target/linux/x86/Makefile
