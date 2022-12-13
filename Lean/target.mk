@@ -43,9 +43,8 @@ DEFAULT_PACKAGES.nas:=\
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full \
 	firewall \
-	ip6tables \
-	iptables \
-	kmod-ipt-offload \
+	nftables \
+	kmod-nft-offload \
 	odhcp6c \
 	odhcpd-ipv6only \
 	ppp \
