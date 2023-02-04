@@ -12,7 +12,3 @@
 
 # Modify default IP
 # sed -i 's/192.168.1.1/192.168.6.1/g' package/base-files/files/bin/config_generate
-
-# 删除原版golang替换为最新版本
-rm -rf feeds/packages/lang/golang
-svn export https://github.com/sbwml/packages_lang_golang/branches/20.x feeds/packages/lang/golang
