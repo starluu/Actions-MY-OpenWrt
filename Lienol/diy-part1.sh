@@ -10,6 +10,9 @@
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
 
+# 删除值守式系统更新
+rm -rf feeds/luci/applications/luci-app-attendedsysupgrade
+
 # 添加passwall2源
 sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
 
