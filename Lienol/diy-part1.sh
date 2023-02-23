@@ -10,17 +10,14 @@
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
 
-# 取消原版lienol插件包
-sed -i 's/^\(.*lienol\)/#&/' feeds.conf.default
-
 # 修改原版luci版本
 sed -i 's/17.01-dev/master/g' feeds.conf.default
 
-# 添加passwall2源
-sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
+# 修改原版默认插件
+sed -i 's/luci-app-timecontrol/luci-app-alist/g' include/target.mk
+sed -i 's/luci-app-control-timewol/luci-app-diskman/g' include/target.mk
+sed -i 's/luci-app-control-weburl/kmod-nft-offload/g' include/target.mk
+sed -i 's/luci-app-control-webrestriction/luci-app-aliyundrive-fuse/g' include/target.mk
 
-# 添加alist源
-sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf.default
-
-# 添加aliyundrive-fuse源
-sed -i '$a src-git fuse https://github.com/messense/aliyundrive-fuse.git' feeds.conf.default
+# 添加第三方插件源
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
