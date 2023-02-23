@@ -13,7 +13,7 @@
 # 取消原版lienol插件包
 sed -i 's/^\(.*lienol\)/#&/' feeds.conf.default
 
-# 修复原版luci版本
+# 修改原版luci版本
 sed -i 's/17.01-dev/master/g' feeds.conf.default
 
 # 添加passwall2源
