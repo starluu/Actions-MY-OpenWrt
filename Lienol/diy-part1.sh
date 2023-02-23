@@ -15,8 +15,8 @@ sed -i 's/17.01-dev/master/g' feeds.conf.default
 
 # 修改原版默认插件
 sed -i 's/luci-app-timecontrol/luci-app-alist/g' include/target.mk
-sed -i 's/luci-app-control-timewol/luci-app-diskman/g' include/target.mk
 sed -i 's/luci-app-control-weburl/kmod-nft-offload/g' include/target.mk
+sed -i 's/luci-app-control-timewol/luci-app-diskman/g' include/target.mk
 sed -i 's/luci-app-control-webrestriction/luci-app-aliyundrive-fuse/g' include/target.mk
 
 # 添加第三方插件源
