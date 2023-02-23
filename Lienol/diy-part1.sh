@@ -18,6 +18,7 @@ sed -i 's/luci-app-timecontrol/luci-app-alist/g' include/target.mk
 sed -i 's/luci-app-control-weburl/kmod-nft-offload/g' include/target.mk
 sed -i 's/luci-app-control-timewol/luci-app-diskman/g' include/target.mk
 sed -i 's/luci-app-control-webrestriction/luci-app-aliyundrive-fuse/g' include/target.mk
+sed -i 's/luci-app-usb-printer/ariang/g' target/linux/x86/Makefile
 
 # 添加第三方插件源
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
