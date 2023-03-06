@@ -9,6 +9,11 @@
 # File name: diy-part1.sh
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
+# 取消原版lienol
+sed -i 's/^\(.*lienol\)/#&/' feeds.conf.default
+
+# 取消原版other
+sed -i 's/^\(.*other\)/#&/' feeds.conf.default
 
 # 修改原版默认插件
 sed -i 's/luci-app-timecontrol/luci-app-alist/g' include/target.mk
