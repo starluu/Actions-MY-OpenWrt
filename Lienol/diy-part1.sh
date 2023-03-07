@@ -17,9 +17,9 @@ sed -i 's/^\(.*other\)/#&/' feeds.conf.default
 
 # 修改原版默认插件
 sed -i 's/luci-app-timecontrol/luci-app-alist/g' include/target.mk
-sed -i 's/luci-app-control-weburl/luci-app-turboacc/g' include/target.mk
+sed -i 's/luci-app-control-weburl/kmod-nft-offload/g' include/target.mk
 sed -i 's/luci-app-control-timewol/luci-app-diskman/g' include/target.mk
-sed -i 's/luci-app-control-webrestriction/luci-app-dockerman/g' include/target.mk
+sed -i 's/luci-app-control-webrestriction/luci-app-aliyundrive-fuse/g' include/target.mk
 sed -i 's/autosamba/luci-app-samba4/g' target/linux/x86/Makefile
 sed -i 's/luci-app-usb-printer/openssh-sftp-server/g' target/linux/x86/Makefile
 
