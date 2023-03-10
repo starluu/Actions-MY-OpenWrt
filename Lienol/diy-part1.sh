@@ -15,6 +15,15 @@ sed -i 's/^\(.*lienol\)/#&/' feeds.conf.default
 # 取消原版other
 sed -i 's/^\(.*other\)/#&/' feeds.conf.default
 
+# 删除原版target.mk
+rm -rf include/target.mk
+
+# 下载新的target.mk
+wget -P include https://github.com/lede-project/source/raw/master/include/target.mk
+
+# 修改target.mk
+sed -i 's/dnsmasq/dnsmasq-full/g' target/linux/x86/Makefile
+
 # 修改原版默认插件
 sed -i 's/autosamba/luci-app-samba4/g' target/linux/x86/Makefile
 sed -i 's/luci-app-usb-printer/openssh-sftp-server/g' target/linux/x86/Makefile
