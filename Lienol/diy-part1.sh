@@ -22,7 +22,7 @@ rm -rf include/target.mk
 wget -P include https://github.com/openwrt/openwrt/raw/master/include/target.mk
 
 # 修改target.mk
-sed -i 's/dnsmasq/dnsmasq-full/g' target/linux/x86/Makefile
+sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
 
 # 修改原版默认插件
 sed -i 's/autosamba/luci-app-samba4/g' target/linux/x86/Makefile
