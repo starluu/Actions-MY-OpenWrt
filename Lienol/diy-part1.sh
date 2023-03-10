@@ -19,7 +19,7 @@ sed -i 's/^\(.*other\)/#&/' feeds.conf.default
 rm -rf include/target.mk
 
 # 下载新的target.mk
-wget -P include https://github.com/lede-project/source/raw/master/include/target.mk
+wget -P include https://github.com/openwrt/openwrt/raw/master/include/target.mk
 
 # 修改target.mk
 sed -i 's/dnsmasq/dnsmasq-full/g' target/linux/x86/Makefile
