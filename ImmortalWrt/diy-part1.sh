@@ -15,6 +15,3 @@ sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git'
 
 # 添加alist源
 sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf.default
-
-# 添加aliyundrive-fuse源
-sed -i '$a src-git fuse https://github.com/messense/aliyundrive-fuse.git' feeds.conf.default
