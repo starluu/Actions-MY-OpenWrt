@@ -20,8 +20,8 @@ on:
         default: 'false'
 
 env:
-  REPO_URL: https://github.com/immortalwrt/immortalwrt.git
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/msylgj/immortalwrt.git
+  REPO_BRANCH: kernel-6.1
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: ImmortalWrt/.config
   DIY_P1_SH: ImmortalWrt/diy-part1.sh
