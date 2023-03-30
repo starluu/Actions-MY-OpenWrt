@@ -9,15 +9,6 @@
 # File name: diy-part1.sh
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
-# 删除原版target.mk
-rm -rf include/target.mk
-
-# 下载新的target.mk
-wget -P include https://github.com/openwrt/openwrt/raw/master/include/target.mk
-
-# 修改target.mk
-sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
-
 # 添加passwall2源
 sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
 
