@@ -13,7 +13,7 @@ imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/gener
 unused_packages="-luci-app-cpufreq -luci-app-filetransfer"
 driver_packages="kmod-usb-net-cdc-ether usb-modeswitch comgt-ncm kmod-usb-net-huawei-cdc-ncm"
 openclash_iptables="default-settings-chn luci luci-compat luci-lib-base luci-lib-fs luci-lib-ipkg"
-my_packages="${unused_packages} luci-theme-material luci-app-openclash luci-app-passwall openssh-sftp-server ${driver_packages} ${openclash_iptables}"
+my_packages="${unused_packages} luci-theme-material luci-app-openclash openssh-sftp-server ${driver_packages} ${openclash_iptables}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
