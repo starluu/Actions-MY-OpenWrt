@@ -19,16 +19,9 @@ jobs:
           sudo chmod +x make-x86
           sudo ./make-x86
       
-    - name: Upload SquashFS Image
-      uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
-      with:
-        name: ImmortalWrt-squashfs-combined.img.gz
-        path: openwrt/bin/targets/*/*/*-squashfs-combined.img.gz
-        
-    - name: Upload SquashFS Image
-      uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
-      with:
-        name: ImmortalWrt-squashfs-combined-efi.img.gz
-        path: openwrt/bin/targets/*/*/*-squashfs-combined-efi.img.gz
+      - name: Upload SquashFS Image
+        uses: actions/upload-artifact@main
+        if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
+        with:
+          name: ImmortalWrt-squashfs-combined.img.gz
+          path: openwrt/bin/targets/*/*/*-squashfs-combined.img.gz
