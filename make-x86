@@ -34,8 +34,6 @@ build_firmware () {
 
 download_imagebuilder
 custom_packages
-adjustment_rootfs
-adding_clash_core
 build_firmware
 
 exit 0
