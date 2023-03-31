@@ -10,6 +10,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
 luci-app-alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.0/luci-app-alist_1.0.8_all.ipk"
 luci-i18n-alist-zh-cn="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.0/luci-i18n-alist-zh-cn_git-23.052.44271-9d6f8d3_all.ipk"
+
 # config package
 unused_packages="-luci-app-cpufreq -luci-app-filetransfer"
 driver_packages="kmod-usb-net-cdc-ether usb-modeswitch comgt-ncm kmod-usb-net-huawei-cdc-ncm"
