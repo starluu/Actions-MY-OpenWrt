@@ -27,9 +27,9 @@ download_imagebuilder () {
     mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
 }
 
-
 custom_packages () {
     wget -P ${imagebuilder_path}/packages/ ${luci_app_alist} || error_msg
+}
 
 build_firmware () {
     cd ${imagebuilder_path}
