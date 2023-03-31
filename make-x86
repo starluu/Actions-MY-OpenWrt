@@ -30,35 +30,6 @@ download_imagebuilder () {
     mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
 }
 
-custom_packages () {
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_openclash} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_netmon} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_shutdown} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_tinyfm} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_base64} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_adguardhome} || error_msg
-}
-
-adjustment_rootfs () {
-    mkdir -p ${imagebuilder_path}/files/etc/uci-defaults/
-    cp -f ${make_path}/uci-defaults/* ${imagebuilder_path}/files/etc/uci-defaults/
-    mkdir -p ${imagebuilder_path}/files/bin/
-    wget -P ${make_path}/ ${speedtest_repo} || error_msg
-    tar -xzvf ${make_path}/*.tgz -C ${imagebuilder_path}/files/bin/
-    rm -f ${make_path}/*.tgz && rm -f ${imagebuilder_path}/files/bin/speedtest.*
-}
-
-adding_clash_core () {
-    mkdir -p ${imagebuilder_path}/files/etc/openclash/core/
-    cd ${imagebuilder_path}/files/etc/openclash/core/
-    wget ${clash} && gunzip *.gz || error_msg
-    mv -f clash-* clash && rm -f *.gz
-    wget ${clash_tun} && gunzip *.gz || error_msg
-    mv -f clash-* clash_tun && rm -f *.gz
-    wget ${clash_meta} && gunzip *.gz || error_msg
-    mv -f clash.* clash_meta && rm -f *.gz
-}
-
 build_firmware () {
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
