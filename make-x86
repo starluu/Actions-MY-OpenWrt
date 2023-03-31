@@ -12,16 +12,6 @@ username="v1nch3r"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/releases/${releases}/targets/x86/generic/immortalwrt-imagebuilder-${releases}-x86-generic.Linux-x86_64.tar.xz"
-clash="https://github.com/Dreamacro/clash/releases/download/v1.14.0/clash-linux-386-v1.14.0.gz"
-clash_tun="https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-386-2023.03.18.gz"
-clash_meta="https://github.com/taamarin/Clash.Meta/releases/download/Prerelease-Alpha/clash.meta-linux-386-alpha-bfab148.gz"
-speedtest_repo="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-i386.tgz"
-luci_app_openclash="https://github.com/vernesong/OpenClash/releases/download/v0.45.59-beta/luci-app-openclash_0.45.59-beta_all.ipk"
-luci_app_netmon="https://github.com/helmiau/helmiwrt-packages/releases/download/ipk/luci-app-netmon_1.3_all.ipk"
-luci_app_shutdown="https://github.com/helmiau/helmiwrt-packages/releases/download/ipk/luci-app-shutdown_1.3_all.ipk"
-luci_app_tinyfm="https://github.com/helmiau/helmiwrt-packages/releases/download/ipk/luci-app-tinyfm_2.5_all.ipk"
-luci_app_base64="https://raw.githubusercontent.com/noct99/blog.vpngame.com/main/luci-app-base64_1.0_all.ipk"
-luci_app_adguardhome="https://github.com/rufengsuixing/luci-app-adguardhome/releases/download/1.8-11/luci-app-adguardhome_1.8-11_all.ipk"
 
 # config package
 unused_packages="-luci-app-cpufreq -luci-app-turboacc -luci-app-filetransfer"
