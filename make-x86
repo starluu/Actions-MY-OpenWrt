@@ -9,12 +9,13 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
 luci_app_alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.0/luci-app-alist_1.0.8_all.ipk"
+luci-i18n-alist-zh-cn="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.0/luci-i18n-alist-zh-cn_git-23.052.44271-9d6f8d3_all.ipk"
 
 # config package
 unused_packages="-luci-app-cpufreq -luci-app-filetransfer"
 driver_packages="kmod-usb-net-cdc-ether usb-modeswitch comgt-ncm kmod-usb-net-huawei-cdc-ncm"
 openclash_iptables="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-compat luci-lib-base luci-lib-fs luci-lib-ipkg"
-my_packages="${unused_packages} alist luci-app-alist ariang luci-i18n-aria2-zh-cn luci-i18n-alist-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn openssh-sftp-server luci-i18n-diskman-zh-cn luci-app-openclash luci-theme-material ${driver_packages} ${openclash_iptables}"
+my_packages="${unused_packages} alist luci-i18n-alist-zh-cn ariang luci-i18n-aria2-zh-cn luci-i18n-alist-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn openssh-sftp-server luci-i18n-diskman-zh-cn luci-app-openclash luci-theme-material ${driver_packages} ${openclash_iptables}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -29,6 +30,7 @@ download_imagebuilder () {
 
 custom_packages () {
     wget -P ${imagebuilder_path}/packages/ ${luci_app_alist} || error_msg
+    wget -P ${imagebuilder_path}/packages/ ${luci-i18n-alist-zh-cn} || error_msg
 }
 
 build_firmware () {
