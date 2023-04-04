@@ -15,7 +15,7 @@ luci_i18n_alist_zh_cn="https://github.com/sbwml/luci-app-alist/releases/download
 unused_packages="-luci-app-cpufreq -v2ray-core"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-compat luci-lib-base luci-lib-fs luci-lib-ipkg"
-my_packages="${unused_packages} alist luci-i18n-alist-zh-cn ariang luci-i18n-aria2-zh-cn luci-i18n-passwall-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn openssh-sftp-server luci-i18n-diskman-zh-cn luci-app-openclash luci-theme-material ${driver_packages} ${default_luci}"
+my_packages="${unused_packages} alist luci-i18n-alist-zh-cn ariang luci-i18n-aria2-zh-cn luci-i18n-passwall-zh-cn chinadns-ng luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn openssh-sftp-server luci-i18n-diskman-zh-cn luci-app-openclash luci-theme-material ${driver_packages} ${default_luci}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
