@@ -11,7 +11,6 @@ imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/gener
 alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.1/alist_3.15.1-1_i386_pentium4.ipk"
 luci_app_alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.1/luci-app-alist_1.0.8_all.ipk"
 luci_i18n_alist_zh_cn="https://github.com/sbwml/luci-app-alist/releases/download/v3.15.1/luci-i18n-alist-zh-cn_git-23.052.44271-9d6f8d3_all.ipk"
-luci_theme_argon="https://github.com/jerrykuku/luci-theme-argon/releases/download/v2.3/luci-theme-argon_2.3_all.ipk"
 
 # config package
 unused_packages="-luci-app-cpufreq"
@@ -34,7 +33,6 @@ custom_packages () {
     wget -P ${imagebuilder_path}/packages/ ${alist} || error_msg
     wget -P ${imagebuilder_path}/packages/ ${luci_app_alist} || error_msg
     wget -P ${imagebuilder_path}/packages/ ${luci_i18n_alist_zh_cn} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_theme_argon} || error_msg
 }
 
 build_firmware () {
