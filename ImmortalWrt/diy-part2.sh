@@ -13,12 +13,5 @@
 # Modify default IP
 # sed -i 's/192.168.1.1/192.168.6.1/g' package/base-files/files/bin/config_generate
 
-# Modify default HostName
-sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
-
 # 取消Immortal大登陆密码
 sed -i 's/^\(.*99999\)/#&/' package/emortal/default-settings/files/99-default-settings
-
-# 删除原版golang添加Alist支持
-rm -rf feeds/packages/lang/golang
-svn export https://github.com/sbwml/packages_lang_golang/trunk feeds/packages/lang/golang
