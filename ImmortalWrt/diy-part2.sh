@@ -15,4 +15,3 @@
 
 # Modify default target.mk
 sed -i 's/luci-app-filetransfer/openssh-sftp-server/g' include/target.mk
-sed -i 's/luci-app-turboacc/kmod-ipt-offload/g' include/target.mk
