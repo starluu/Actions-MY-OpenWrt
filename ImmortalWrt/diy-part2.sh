@@ -12,3 +12,7 @@
 
 # Modify default IP
 # sed -i 's/192.168.1.1/192.168.6.1/g' package/base-files/files/bin/config_generate
+
+# Modify default target.mk
+sed -i 's/luci-app-filetransfer/openssh-sftp-server/g' include/target.mk
+sed -i 's/luci-app-turboacc/kmod-ipt-offload/g' include/target.mk
