@@ -8,9 +8,9 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
-alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.16.1/alist_3.16.1-1_i386_pentium4.ipk"
-luci_app_alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.16.1/luci-app-alist_1.0.8_all.ipk"
-luci_i18n_alist_zh_cn="https://github.com/sbwml/luci-app-alist/releases/download/v3.16.1/luci-i18n-alist-zh-cn_git-23.104.20606-8a14151_all.ipk"
+alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.16.3/alist_3.16.3-1_i386_pentium4.ipk"
+luci_app_alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.16.3/luci-app-alist_1.0.8_all.ipk"
+luci_i18n_alist_zh_cn="https://github.com/sbwml/luci-app-alist/releases/download/v3.16.3/luci-i18n-alist-zh-cn_git-23.104.20606-8a14151_all.ipk"
 
 # config package
 unused_packages="-luci-app-cpufreq"
