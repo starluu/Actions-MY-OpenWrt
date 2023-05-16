@@ -29,7 +29,7 @@ download_imagebuilder () {
 
 custom_packages () {
     wget ${alist} || error_msg
-    tar -zxvf openwrt-22.03-i386_pentium4.tar.gz -C /packages
+    tar -zxvf openwrt-22.03-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
 }
 
 build_firmware () {
