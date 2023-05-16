@@ -8,9 +8,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
-alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.17.0/alist_3.17.0-1_i386_pentium4.ipk"
-luci_app_alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.17.0/luci-app-alist_1.0.8_all.ipk"
-luci_i18n_alist_zh_cn="https://github.com/sbwml/luci-app-alist/releases/download/v3.17.0/luci-i18n-alist-zh-cn_git-23.104.20606-8a14151_all.ipk"
+alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.17.0/openwrt-22.03-i386_pentium4.tar.gz"
 
 # config package
 unused_packages="-luci-app-cpufreq"
@@ -30,9 +28,8 @@ download_imagebuilder () {
 }
 
 custom_packages () {
-    wget -P ${imagebuilder_path}/packages/ ${alist} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_alist} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_i18n_alist_zh_cn} || error_msg
+    wget ${alist} || error_msg
+    tar -zxvf openwrt-22.03-i386_pentium4.tar.gz -C /packages
 }
 
 build_firmware () {
