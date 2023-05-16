@@ -8,8 +8,6 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
-samba4_server="https://downloads.openwrt.org/releases/packages-22.03/i386_pentium4/packages/samba4-server_4.14.12-3_i386_pentium4.ipk"
-samba4_libs="https://downloads.openwrt.org/releases/packages-22.03/i386_pentium4/packages/samba4-libs_4.14.12-3_i386_pentium4.ipk"
 alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.17.0/openwrt-22.03-i386_pentium4.tar.gz"
 
 # config package
@@ -30,8 +28,6 @@ download_imagebuilder () {
 }
 
 custom_packages () {
-    wget -P ${imagebuilder_path}/packages/ ${samba4_server} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${samba4_libs} || error_msg
     wget ${alist} || error_msg
     tar -zxvf openwrt-22.03-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
 }
