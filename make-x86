@@ -8,6 +8,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
+vsftpd="https://op.supes.top/packages/i386_pentium4/vsftpd-alt_3.0.5-14_i386_pentium4.ipk"
 alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.17.0/openwrt-22.03-i386_pentium4.tar.gz"
 
 # config package
@@ -28,6 +29,7 @@ download_imagebuilder () {
 }
 
 custom_packages () {
+    wget -P ${imagebuilder_path}/packages/ ${vsftpd} || error_msg
     wget ${alist} || error_msg
     tar -zxvf openwrt-22.03-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
 }
