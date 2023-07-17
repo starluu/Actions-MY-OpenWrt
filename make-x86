@@ -8,7 +8,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.xz"
-alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.21.0/openwrt-22.03-i386_pentium4.tar.gz"
+alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.22.1/openwrt-22.03-i386_pentium4.tar.gz"
 
 # config package
 unused_packages="-luci-app-cpufreq"
