@@ -28,10 +28,10 @@ download_imagebuilder () {
     mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
 }
 
-custom_packages () {
+# custom_packages () {
 #     wget -P ${imagebuilder_path}/packages/ ${luci_app_passwall2} || error_msg
 #     wget -P ${imagebuilder_path}/packages/ ${luci_i18n_passwall2_zh_cn} || error_msg
-}
+# }
 
 build_firmware () {
     cd ${imagebuilder_path}
