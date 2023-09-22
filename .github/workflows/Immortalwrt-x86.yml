@@ -19,7 +19,7 @@ jobs:
           sudo chmod +x make-x86
           sudo ./make-x86
           sudo timedatectl set-timezone Asia/Shanghai
-          echo "BUILD_TAG=ImmortalWrt-Snapshots-x86_$(date +"%F-%T")" >> ${GITHUB_ENV}          
+          echo "BUILD_TAG=ImmortalWrt-Snapshots-x86_$(date +"%F %T")" >> ${GITHUB_ENV}          
       
       - name: Upload OpenWrt Firmware to Release
         uses: ncipollo/release-action@main
