@@ -18,12 +18,14 @@ jobs:
           sudo apt install qemu-utils mkisofs -y
           sudo chmod +x make-x86
           sudo ./make-x86
+          sudo timedatectl set-timezone Asia/Shanghai
+          echo "BUILD_TAG=ImmortalWrt-Snapshots-x86-$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
       
       - name: Upload OpenWrt Firmware to Release
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
-          tag: immortalwrt-snapshots-x86
+          tag: ${{ env.BUILD_TAG }}
           artifacts: "openwrt/bin/targets/x86/generic/*"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
