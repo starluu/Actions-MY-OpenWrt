@@ -13,5 +13,5 @@
 # 添加passwall2源
 sed -i '$a src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' feeds.conf.default
 
-# 添加alist源
-sed -i '$a src-git alist https://github.com/sbwml/luci-app-alist.git' feeds.conf.default
+# 修改内核版本
+sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=6.1/g' target/linux/x86/Makefile
