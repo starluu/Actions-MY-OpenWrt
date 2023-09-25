@@ -1,4 +1,4 @@
-name: Immortalwrt-x86
+name: Immortalwrt-ImageBuilder
 
 on:
   workflow_dispatch:
