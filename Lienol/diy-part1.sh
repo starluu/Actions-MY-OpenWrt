@@ -9,12 +9,6 @@
 # File name: diy-part1.sh
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
-# 取消原版lienol
-sed -i 's/^\(.*lienol\)/#&/' feeds.conf.default
-
-# 取消原版other
-sed -i 's/^\(.*other\)/#&/' feeds.conf.default
-
 # 删除原版target.mk
 rm -rf include/target.mk
 
