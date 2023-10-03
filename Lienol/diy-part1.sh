@@ -22,5 +22,11 @@ sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
 sed -i 's/autosamba/luci-app-samba4/g' target/linux/x86/Makefile
 sed -i 's/luci-app-usb-printer/openssh-sftp-server/g' target/linux/x86/Makefile
 
+# 取消原版lienol
+sed -i 's/^\(.*lienol\)/#&/' feeds.conf.default
+
+# 取消原版other
+sed -i 's/^\(.*other\)/#&/' feeds.conf.default
+
 # 添加第三方插件源
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
