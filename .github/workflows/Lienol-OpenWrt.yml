@@ -118,21 +118,21 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: Lean_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: Lienol_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
     - name: Upload SquashFS Image
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
       with:
-        name: Lean-squashfs-combined.img.gz
+        name: Lienol-squashfs-combined.img.gz
         path: openwrt/bin/targets/*/*/*-squashfs-combined.img.gz
         
     - name: Upload SquashFS Image
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_SQUASHFS_IMAGES == 'true'
       with:
-        name: Lean-squashfs-combined-efi.img.gz
+        name: Lienol-squashfs-combined-efi.img.gz
         path: openwrt/bin/targets/*/*/*-squashfs-combined-efi.img.gz
         
     - name: Organize files
@@ -148,7 +148,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: Lean_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: Lienol_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Upload firmware to cowtransfer
