@@ -43,7 +43,9 @@ DEFAULT_PACKAGES.nas:=\
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full \
 	firewall \
-	ip6tables \
+        ipv6helper \
+        ip6tables-extra \
+	ip6tables-mod-nat \
 	iptables \
 	odhcp6c \
 	odhcpd-ipv6only \
