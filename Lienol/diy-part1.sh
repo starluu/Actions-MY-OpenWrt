@@ -15,9 +15,6 @@ rm -rf include/target.mk
 # 下载新的target.mk
 wget -P include https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lienol/target.mk
 
-# 修改target.mk
-sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
-
 # 修改原版默认插件
 sed -i 's/autosamba/luci-app-samba4/g' target/linux/x86/Makefile
 sed -i 's/luci-app-usb-printer/openssh-sftp-server/g' target/linux/x86/Makefile
