@@ -13,7 +13,7 @@
 rm -rf include/target.mk
 
 # 下载新的target.mk
-wget -P include https://github.com/openwrt/openwrt/raw/master/include/target.mk
+wget -P include https://github.com/starluu/Actions-MY-OpenWrt/raw/main/Lienol/target.mk
 
 # 修改target.mk
 sed -i 's/dnsmasq/dnsmasq-full/g' include/target.mk
