@@ -8,8 +8,8 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/releases/21.02.7/targets/x86/generic/immortalwrt-imagebuilder-21.02.7-x86-generic.Linux-x86_64.tar.xz"
-luci-app-turboacc="https://downloads.immortalwrt.org/releases/packages-21.02/i386_pentium4/luci/luci-app-turboacc_git-23.220.33159-65d9279_all.ipk"
-luci-i18n-turboacc-zh-cn="https://downloads.immortalwrt.org/releases/packages-21.02/i386_pentium4/luci/luci-i18n-turboacc-zh-cn_git-23.131.45438-002672a_all.ipk"
+luci_app_turboacc="https://downloads.immortalwrt.org/releases/packages-21.02/i386_pentium4/luci/luci-app-turboacc_git-23.220.33159-65d9279_all.ipk"
+luci_i18n_turboacc_zh_cn="https://downloads.immortalwrt.org/releases/packages-21.02/i386_pentium4/luci/luci-i18n-turboacc-zh-cn_git-23.131.45438-002672a_all.ipk"
 
 # config package
 unused_packages="-kmod-nft-offload"
@@ -29,8 +29,8 @@ download_imagebuilder () {
 }
 
 custom_packages () {
-    wget -P ${imagebuilder_path}/packages/ ${luci-app-turboacc} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci-i18n-turboacc-zh-cn} || error_msg
+    wget -P ${imagebuilder_path}/packages/ ${luci_app_turboacc} || error_msg
+    wget -P ${imagebuilder_path}/packages/ ${luci_i18n_turboacc_zh_cn} || error_msg
 }
 
 build_firmware () {
