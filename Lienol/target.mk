@@ -25,8 +25,9 @@ DEFAULT_PACKAGES:=\
 	uci \
 	uclient-fetch \
 	urandom-seed \
-	luci \
-        luci-compat
+	luci luci-compat wget-ssl curl ca-certificates htop \
+        default-settings \
+        urngd
 
 ifneq ($(CONFIG_SELINUX),)
 DEFAULT_PACKAGES+=busybox-selinux procd-selinux
