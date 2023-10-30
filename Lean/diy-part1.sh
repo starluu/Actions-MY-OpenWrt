@@ -10,6 +10,9 @@
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
 
+# 删除旧版themes
+rm -rf feeds/luci/themes
+
 # 删除原版target.mk
 rm -rf include/target.mk
 
