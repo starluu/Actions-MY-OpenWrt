@@ -10,9 +10,6 @@
 # Description: OpenWrt DIY script part 1 (Before Update feeds)
 #
 
-# 删除旧版themes
-rm -rf feeds/luci/themes
-
 # 删除原版target.mk
 rm -rf include/target.mk
 
@@ -30,6 +27,9 @@ sed -i 's/^\(.*luci\)/#&/' feeds.conf.default
 
 # 添加第三方luci源
 sed -i '$a src-git luci https://github.com/Lienol/openwrt-luci.git;21.02' feeds.conf.default
+
+# 删除旧版themes
+rm -rf feeds/luci/themes
 
 # 添加第三方插件源
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git' feeds.conf.default
