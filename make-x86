@@ -33,7 +33,7 @@ custom_packages () {
 # wget -P ${imagebuilder_path}/packages/ ${luci_app_passwall2} || error_msg
 # wget -P ${imagebuilder_path}/packages/ ${luci_i18n_passwall2_zh_cn} || error_msg
     wget ${alist} || error_msg
-    tar -zxvf openwrt-22.03-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
+    tar -zxvf openwrt-21.02-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
 }
 
 build_firmware () {
