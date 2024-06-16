@@ -12,9 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
 
-      - name: Initialization environment
-      env:
-        DEBIAN_FRONTEND: noninteractive
+      - name: Run make-x86
       run: |
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get -qq update
@@ -24,9 +22,6 @@ jobs:
           sudo timedatectl set-timezone "$TZ"
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
-
-      - name: Run make-x86
-        run: |
           sudo chmod +x make-x86
           sudo ./make-x86
           sudo timedatectl set-timezone Asia/Shanghai
