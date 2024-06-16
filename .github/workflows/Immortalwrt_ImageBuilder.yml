@@ -15,7 +15,7 @@ jobs:
       - name: Run make-x86
         run: |
           sudo apt update
-          sudo apt install qemu-utils mkisofs -y
+          sudo apt install $(curl -fsSL https://raw.githubusercontent.com/Huanyueyichen/openwrt-list/master/lede-ubuntu-2204)
           sudo chmod +x make-x86
           sudo ./make-x86
           sudo timedatectl set-timezone Asia/Shanghai
