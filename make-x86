@@ -8,8 +8,8 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
-# luci_app_passwall2="https://github.com/xiaorouji/openwrt-passwall2/releases/download/1.19-6/luci-app-passwall2_1.19-6_all.ipk"
-# luci_i18n_passwall2_zh_cn="https://github.com/xiaorouji/openwrt-passwall2/releases/download/1.19-6/luci-i18n-passwall2-zh-cn_1.19-6_all.ipk"
+luci_app_tailscale="https://github.com/asvow/luci-app-tailscale/releases/download/v1.1.1/luci-app-tailscale_1.1.1_all.ipk"
+luci_i18n_tailscale_zh_cn="https://github.com/asvow/luci-app-tailscale/releases/download/v1.1.1/luci-i18n-tailscale-zh-cn_240611.42655_all.ipk"
 # alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.29.1/openwrt-21.02-i386_pentium4.tar.gz"
 
 # config package
@@ -29,12 +29,12 @@ download_imagebuilder () {
     mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
 }
 
-# custom_packages () {
-#    wget -P ${imagebuilder_path}/packages/ ${luci_app_passwall2} || error_msg
-#    wget -P ${imagebuilder_path}/packages/ ${luci_i18n_passwall2_zh_cn} || error_msg
+custom_packages () {
+    wget -P ${imagebuilder_path}/packages/ ${luci_app_tailscale} || error_msg
+    wget -P ${imagebuilder_path}/packages/ ${luci_i18n_tailscale_zh_cn} || error_msg
 #    wget ${alist} || error_msg
 #    tar -zxvf openwrt-21.02-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
-# }
+}
 
 build_firmware () {
     cd ${imagebuilder_path}
