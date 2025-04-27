@@ -7,17 +7,16 @@ openwrt_dir="openwrt"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
-imagebuilder_repo="https://downloads.openwrt.org/snapshots/targets/x86/generic/openwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
-luci_app_diskman="https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/luci/luci-app-diskman-0.2.11-r2.apk"
-luci_i18n_diskman_zh_cn="https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/luci/luci-i18n-diskman-zh-cn-23.037.50360~a2b9bc5.apk"
-luci_theme_argon="https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/luci/luci-theme-argon-2.3.2-r20250207.apk"
+imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
+# luci_app_passwall2="https://github.com/xiaorouji/openwrt-passwall2/releases/download/1.19-6/luci-app-passwall2_1.19-6_all.ipk"
+# luci_i18n_passwall2_zh_cn="https://github.com/xiaorouji/openwrt-passwall2/releases/download/1.19-6/luci-i18n-passwall2-zh-cn_1.19-6_all.ipk"
 # alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.29.1/openwrt-21.02-i386_pentium4.tar.gz"
 
 # config package
 unused_packages="-luci-app-cpufreq"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg"
-my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-theme-argon libopenssl-legacy ${driver_packages} ${unused_packages}"
+my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-argon-config-zh-cn libopenssl-legacy ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -26,14 +25,13 @@ error_msg() {
 
 download_imagebuilder () {
     wget ${imagebuilder_repo} || error_msg
-    tar -I zstd -xvf openwrt-imagebuilder-* && rm -f openwrt-imagebuilder-*.tar.zst
-    mv -f openwrt-imagebuilder-* ${openwrt_dir}
+    tar -I zstd -xvf immortalwrt-imagebuilder-* && rm -f immortalwrt-imagebuilder-*.tar.zst
+    mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
 }
 
 # custom_packages () {
-    wget -P ${imagebuilder_path}/packages/ ${luci_app_diskman} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_i18n_diskman_zh_cn} || error_msg
-    wget -P ${imagebuilder_path}/packages/ ${luci_theme_argon} || error_msg
+#    wget -P ${imagebuilder_path}/packages/ ${luci_app_passwall2} || error_msg
+#    wget -P ${imagebuilder_path}/packages/ ${luci_i18n_passwall2_zh_cn} || error_msg
 #    wget ${alist} || error_msg
 #    tar -zxvf openwrt-21.02-i386_pentium4.tar.gz -C ${imagebuilder_path}/packages/
 # }
