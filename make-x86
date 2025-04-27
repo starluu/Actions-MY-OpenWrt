@@ -9,7 +9,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 # config repo
 imagebuilder_repo="https://downloads.openwrt.org/snapshots/targets/x86/generic/openwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
 luci_app_diskman="https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/luci/luci-app-diskman-0.2.11-r2.apk"
-luci_i18n_diskman_zh_cn="https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/luci/luci-i18n-diskman-zh-cn-23.037.50360~a2b9bc5.apk"
+luci_i18n_diskman_zh_cn="https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/refs/heads/main/luci-i18n-diskman-zh-cn.apk"
 luci_theme_argon="https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/luci/luci-theme-argon-2.3.2-r20250207.apk"
 # alist="https://github.com/sbwml/luci-app-alist/releases/download/v3.29.1/openwrt-21.02-i386_pentium4.tar.gz"
 
