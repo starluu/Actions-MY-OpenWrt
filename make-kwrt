@@ -3,7 +3,7 @@
 
 # config path
 make_path="$(pwd)"
-openwrt_dir="lede"
+openwrt_dir="openwrt"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
