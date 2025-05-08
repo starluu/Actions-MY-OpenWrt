@@ -12,7 +12,7 @@ imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/generic/kwrt
 # config package
 unused_packages=""
 driver_packages=""
-default_luci=""
+default_luci="luci"
 my_packages="${default_luci}  ${driver_packages} ${unused_packages}"
 
 error_msg() {
