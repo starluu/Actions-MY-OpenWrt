@@ -10,10 +10,10 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/generic/kwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
 
 # config package
-unused_packages=""
+unused_packages="-luci-proto-wireguard -luci-app-partexp -luci-app-syscontrol -luci-app-advancedplus -luci-app-filemanager -luci-app-upnp"
 driver_packages=""
-default_luci="luci"
-my_packages="${default_luci}  ${driver_packages} ${unused_packages}"
+default_luci="luci luci-i18n-base-zh-cn"
+my_packages="${default_luci} luci-app-passwall2 ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
