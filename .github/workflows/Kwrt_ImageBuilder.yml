@@ -14,7 +14,6 @@ jobs:
 
       - name: Run make-kwrt
         run: |
-          sudo -s
           bash unset http_proxy unset https_proxy
           sudo apt update
           sudo apt install qemu-utils mkisofs        
