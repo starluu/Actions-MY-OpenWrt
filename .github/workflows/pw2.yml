@@ -213,7 +213,7 @@ jobs:
       
       - name: Create install.sh 
         run: |
-            echo -e "#!/bin/sh\n\nopkg update\nif [ \$? -ne 0 ]; then\n    echo \"update failed\"\n    exit 1\nfi\nopkg install depends/*.ipk --force-depends\nopkg install *.ipk --force-depends" > i386_pentium4/install.sh
+            echo -e "#!/bin/sh\n\napk update\nif [ \$? -ne 0 ]; then\n    echo \"update failed\"\n    exit 1\nfi\napk add depends/*.ipk --force-depends\napk add *.ipk --force-depends" > i386_pentium4/install.sh
             chmod +x i386_pentium4/install.sh
             cp i386_pentium4/install.sh a53/
   
