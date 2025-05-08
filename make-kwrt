@@ -10,9 +10,9 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/generic/kwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
 
 # config package
-unused_packages="-luci-proto-wireguard -luci-app-partexp -luci-app-syscontrol -luci-app-advancedplus -luci-app-filemanager -luci-app-upnp"
+unused_packages="-luci-proto-wireguard -luci-app-log-viewer -luci-app-syscontrol -luci-app-advancedplus -luci-app-filemanager -luci-app-upnp"
 driver_packages=""
-default_luci="luci luci-i18n-base-zh-cn"
+default_luci="luci luci-i18n-base-zh-cn block-mount dnsmasq-full firewall4"
 my_packages="${default_luci} luci-app-passwall2 ${driver_packages} ${unused_packages}"
 
 error_msg() {
@@ -28,7 +28,7 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
-    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
+    make image PROFILE="generic" DEFAULT_PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
 
