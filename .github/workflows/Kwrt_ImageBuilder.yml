@@ -1,4 +1,4 @@
-name: Immortalwrt_ImageBuilder
+name: Kwrt_ImageBuilder
 
 on:
   workflow_dispatch:
@@ -12,14 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main       
 
-      - name: Run make-x86
+      - name: Run make-kwrt
         run: |
           sudo apt update
           sudo apt install qemu-utils mkisofs        
-          sudo chmod +x make-x86
-          sudo ./make-x86
+          sudo chmod +x make-kwrt
+          sudo ./make-kwrt
           sudo timedatectl set-timezone Asia/Shanghai
-          echo "BUILD_TAG=ImmortalWrt-Snapshots-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
+          echo "BUILD_TAG=Kwrt-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
       
       - name: Upload OpenWrt Firmware to Release
         uses: ncipollo/release-action@main
