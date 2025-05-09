@@ -31,7 +31,6 @@ build_firmware () {
     rm -rf repositories.conf
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/repositories.conf
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
-    sed -i 's/192.168.1.3/10.0.0.1/g' etc/config/network
     echo "success..."
 }
 
