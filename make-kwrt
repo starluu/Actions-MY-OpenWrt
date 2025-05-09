@@ -31,7 +31,6 @@ build_firmware () {
     cd ${imagebuilder_path}
     rm -rf repositories.conf
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/repositories.conf
-    sed -i 's/KERNEL_PATCHVER:=6.6/KERNEL_PATCHVER:=6.12/g' target/linux/x86/Makefile
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
