@@ -30,7 +30,7 @@ build_firmware () {
     cd ${imagebuilder_path}
     rm -rf repositories.conf
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/repositories.conf
-    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" sed -i 's/192.168.1.1/192.168.50.5/g' files/bin/config_generate || error_msg
+    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" sed -i 's/192.168.1.1/10.0.0.1/g' files/bin/config_generate || error_msg
     echo "success..."
 }
 
