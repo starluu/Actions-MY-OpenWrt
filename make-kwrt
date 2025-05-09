@@ -30,6 +30,7 @@ build_firmware () {
     cd ${imagebuilder_path}
     rm -rf repositories.conf
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/repositories.conf
+    cp -r custom_files/* ./files/
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
