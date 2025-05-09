@@ -10,10 +10,11 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/generic/kwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
 
 # config package
-unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-log-viewer -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard"
+unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-log-viewer -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard -luci-app-partexp"
 driver_packages=""
 default_luci="luci luci-app-argon-config"
-my_packages="${default_luci} ${driver_packages} ${unused_packages}"
+my_packages="luci-i18n-alist-zh-cn luci-app-passwall2 luci-app-aria2 luci-app-samba4 luci-app-vsftpd"
+all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -30,9 +31,7 @@ build_firmware () {
     cd ${imagebuilder_path}
     rm -rf repositories.conf
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/repositories.conf
-    cp -r files/* ./files/
-    chmod +x files/etc/uci-defaults/99-custom
-    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
+    make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
 
