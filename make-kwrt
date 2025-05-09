@@ -30,7 +30,7 @@ build_firmware () {
     cd ${imagebuilder_path}
     rm -rf repositories.conf
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/repositories.conf
-    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" uci set network.lan.ipaddr='192.168.1.1' || error_msg
+    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" rm -rf files/usr/lib/lua/luci/view/admin_status/index/link.htm || error_msg
     echo "success..."
 }
 
