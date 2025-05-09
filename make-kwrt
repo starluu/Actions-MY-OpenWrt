@@ -1,7 +1,6 @@
 #!/bin/sh
 # Log file for debugging
-LOGFILE="/tmp/uci-defaults-log.txt"
-echo "Starting /files/etc/uci-defaults/99-custom at $(date)" >> $LOGFILE
+echo "Starting /files/etc/uci-defaults/99-custom"
 
 # config path
 make_path="$(pwd)"
