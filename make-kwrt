@@ -13,7 +13,7 @@ imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/generic/kwrt
 # config package
 unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-log-viewer -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard"
 driver_packages=""
-default_luci="luci luci-app-argon-config firewall4 ppp ppp-mod-pppoe"
+default_luci="luci luci-app-argon-config"
 my_packages="${default_luci} ${driver_packages} ${unused_packages}"
 
 error_msg() {
