@@ -13,7 +13,7 @@ imagebuilder_repo="https://downloads.openwrt.org/snapshots/targets/x86/generic/o
 unused_packages="-luci-app-cpufreq"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg"
-my_packages="${default_luci} luci-i18n-samba4-zh-cn block-mount cfdisk libopenssl-legacy luci-theme-material ${driver_packages} ${unused_packages}"
+my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn block-mount cfdisk libopenssl-legacy luci-theme-material ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
