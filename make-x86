@@ -28,7 +28,7 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
-    sed -i 's/# CONFIG_TARGET_ROOTFS_PARTSIZE=104/CONFIG_TARGET_ROOTFS_PARTSIZE=1024/g' ./.config
+    sed -i 's/# PARTSIZE=104/PARTSIZE=1024/g' ./.config
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
