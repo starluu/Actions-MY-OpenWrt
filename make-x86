@@ -7,13 +7,13 @@ openwrt_dir="openwrt"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
-imagebuilder_repo="https://downloads.openwrt.org/snapshots/targets/x86/generic/openwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
+imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
 
 # config package
 unused_packages="-luci-app-cpufreq"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg"
-my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn ariang block-mount cfdisk libopenssl-legacy luci-theme-material ${driver_packages} ${unused_packages}"
+my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-argon-config-zh-cn libopenssl-legacy ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -22,14 +22,12 @@ error_msg() {
 
 download_imagebuilder () {
     wget ${imagebuilder_repo} || error_msg
-    tar -I zstd -xvf openwrt-imagebuilder-* && rm -f openwrt-imagebuilder-*.tar.zst
-    mv -f openwrt-imagebuilder-* ${openwrt_dir}
+    tar -I zstd -xvf immortalwrt-imagebuilder-* && rm -f immortalwrt-imagebuilder-*.tar.zst
+    mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
 }
 
 build_firmware () {
     cd ${imagebuilder_path}
-    sed -i 's/PARTSIZE=104/PARTSIZE=160/g' ./.config
-    sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' ./.config
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
