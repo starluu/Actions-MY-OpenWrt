@@ -22,8 +22,8 @@ error_msg() {
 
 download_imagebuilder () {
     wget ${imagebuilder_repo} || error_msg
-    tar -I zstd -xvf immortalwrt-imagebuilder-* && rm -f immortalwrt-imagebuilder-*.tar.zst
-    mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
+    tar -I zstd -xvf openwrt-imagebuilde-* && rm -f openwrt-imagebuilde-*.tar.zst
+    mv -f openwrt-imagebuilde-* ${openwrt_dir}
 }
 
 build_firmware () {
