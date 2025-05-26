@@ -28,7 +28,7 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
-    sed -i 's/PARTSIZE=104/PARTSIZE=1024/g' ./.config
+    sed -i 's/PARTSIZE=104/PARTSIZE=160/g' ./.config
     sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' ./.config
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
