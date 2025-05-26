@@ -8,7 +8,10 @@ echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 uci set network.lan.ipaddr='192.168.1.1'
 uci commit
 
-# 删除编译作者信息
+# 删除作者广告信息
 rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
+
+# 卸载顽固预装软件
+opkg remove luci-app-partexp
 
 exit 0
