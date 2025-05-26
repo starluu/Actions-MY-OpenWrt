@@ -14,10 +14,4 @@ rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 # 卸载顽固预装软件
 opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
 
-# 卸载顽固预装软件
-passwd -d root
-
-# 删除初始密码
-passwd -d root
-
 exit 0
