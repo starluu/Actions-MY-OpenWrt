@@ -6,7 +6,6 @@ echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
 # 多网口设备 支持修改为别的ip地址
 uci set network.lan.ipaddr='192.168.1.1'
-uci set network.lan.gateway='192.168.1.2' 
 uci add_list network.lan.dns='1.1.1.1'
 uci add_list network.lan.dns='8.8.8.8'
 uci add_list network.lan.dns='192.168.1.2'
