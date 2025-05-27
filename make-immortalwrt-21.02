@@ -29,9 +29,10 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
-    wget -P files/tmp/alist https://github.com/sbwml/luci-app-alist/releases/download/v3.45.0/openwrt-21.02-i386_pentium4.tar.gz
-    cd ./files/tmp/alist
+    wget -P files/etc/alist https://github.com/sbwml/luci-app-alist/releases/download/v3.45.0/openwrt-21.02-i386_pentium4.tar.gz
+    cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz
+    rm -f openwrt-21.02-i386_pentium4.tar.gz
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
