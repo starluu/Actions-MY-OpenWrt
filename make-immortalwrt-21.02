@@ -32,7 +32,6 @@ build_firmware () {
     wget -P files/etc/alist https://github.com/sbwml/luci-app-alist/releases/download/v3.45.0/openwrt-21.02-i386_pentium4.tar.gz
     cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz
-    rm -f openwrt-21.02-i386_pentium4.tar.gz
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
