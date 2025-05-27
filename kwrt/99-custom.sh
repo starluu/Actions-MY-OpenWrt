@@ -5,6 +5,7 @@ LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
 # 多网口设备 支持修改为别的ip地址
+uci set network.lan.ifname="eth0 eth1 eth2 eth3"
 uci set network.lan.ipaddr='192.168.1.1'
 uci set network.lan.gateway='192.168.1.2'
 uci add_list network.lan.dns='1.1.1.1'
@@ -17,9 +18,5 @@ rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 
 # 卸载顽固预装软件
 opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
-
-# 安装最新alist
-mv /etc/alist/packages_ci/luci-i18n-alist-zh-cn_*.ipk /etc/alist/
-opkg install /etc/alist/packages_ci/*.ipk --force-depends
 
 exit 0
