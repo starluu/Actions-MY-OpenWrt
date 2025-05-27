@@ -13,7 +13,7 @@ imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/gener
 unused_packages="-luci-app-cpufreq"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg"
-my_packages="${default_luci} luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-argon-config-zh-cn libopenssl-legacy ${driver_packages} ${unused_packages}"
+my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-argon-config-zh-cn libopenssl-legacy ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -27,11 +27,6 @@ download_imagebuilder () {
 }
 
 build_firmware () {
-    cd ${imagebuilder_path}
-    wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
-    wget -P files/etc/alist https://github.com/sbwml/luci-app-alist/releases/download/v3.45.0/openwrt-22.03-i386_pentium4.tar.gz
-    cd ./files/etc/alist
-    tar -xvzf openwrt-22.03-i386_pentium4.tar.gz
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
