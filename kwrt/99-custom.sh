@@ -1,4 +1,4 @@
-#!/bin/sh
+etc#!/bin/sh
 # 99-custom.sh 就是immortalwrt固件首次启动时运行的脚本 位于固件内的/etc/uci-defaults/99-custom.sh
 # Log file for debugging
 LOGFILE="/tmp/uci-defaults-log.txt"
@@ -19,6 +19,7 @@ rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
 
 # 安装最新alist
-opkg install /tmp/alist/packages_ci/*.ipk  --force-depends
+opkg install /etc/alist/packages_ci/*.ipk  --force-depends
+rm -f /etc/alist/*
 
 exit 0
