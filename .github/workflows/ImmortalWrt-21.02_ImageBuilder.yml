@@ -1,0 +1,31 @@
+name: ImmortalWrt-21.02_ImageBuilder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main       
+
+      - name: Run make-immortalwrt-21.02
+        run: |
+          sudo apt update
+          sudo apt install qemu-utils mkisofs        
+          sudo chmod +x make-immortalwrt-21.02
+          sudo ./make-immortalwrt-21.02
+          sudo timedatectl set-timezone Asia/Shanghai
+          echo "BUILD_TAG=ImmortalWrt-Snapshots-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
+      
+      - name: Upload OpenWrt Firmware to Release
+        uses: ncipollo/release-action@main
+        if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+        with:
+          tag: ${{ env.BUILD_TAG }}
+          artifacts: "openwrt/bin/targets/x86/generic/*"
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
