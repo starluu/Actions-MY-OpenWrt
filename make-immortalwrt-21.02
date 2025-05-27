@@ -1,0 +1,43 @@
+#!/bin/sh
+#==========================================================
+
+# config path
+make_path="$(pwd)"
+openwrt_dir="openwrt"
+imagebuilder_path="${make_path}/${openwrt_dir}"
+
+# config repo
+imagebuilder_repo="https://downloads.immortalwrt.org/releases/21.02-SNAPSHOT/targets/x86/generic/immortalwrt-imagebuilder-21.02-SNAPSHOT-x86-generic.Linux-x86_64.tar.xz"
+
+# config package
+unused_packages=""
+driver_packages=""
+default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-compat luci-lib-base luci-lib-ipkg"
+my_packages="${default_luci} luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-argon-config-zh-cn ${driver_packages} ${unused_packages}"
+
+error_msg() {
+    echo -e "${ERROR} ${1}"
+    exit 1
+}
+
+download_imagebuilder () {
+    wget ${imagebuilder_repo} || error_msg
+    tar -I zstd -xvf immortalwrt-imagebuilder-* && rm -f immortalwrt-imagebuilder-*.tar.zst
+    mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
+}
+
+build_firmware () {
+    cd ${imagebuilder_path}
+    wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
+    wget -P files/etc/alist https://github.com/sbwml/luci-app-alist/releases/download/v3.45.0/openwrt-21.02-i386_pentium4.tar.gz
+    cd ./files/etc/alist
+    tar -xvzf openwrt-21.02-i386_pentium4.tar.gz
+    cd ${imagebuilder_path}
+    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
+    echo "success..."
+}
+
+download_imagebuilder
+build_firmware
+
+exit 0
