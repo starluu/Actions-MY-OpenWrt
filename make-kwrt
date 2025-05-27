@@ -33,7 +33,7 @@ build_firmware () {
     wget https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/repositories.conf
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
     wget -P files/etc/alist https://github.com/sbwml/luci-app-alist/releases/download/v3.45.0/openwrt-22.03-i386_pentium4.tar.gz
-    tar -xvzf files/etc/alist/openwrt-22.03-i386_pentium4.tar.gz
+    tar -xvzf /files/etc/alist/openwrt-22.03-i386_pentium4.tar.gz
     sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' ./.config
     sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' ./.config
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
