@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main       
 
-      - name: Run make-x86
+      - name: Run make-immortalwrt-21.02
         run: |
           sudo apt update
           sudo apt install qemu-utils mkisofs        
