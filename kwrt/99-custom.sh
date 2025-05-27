@@ -20,6 +20,6 @@ opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
 
 # 安装最新alist
 opkg install /etc/alist/packages_ci/*.ipk  --force-depends
-rm -f /etc/alist/*
+rm -rf /etc/alist/*
 
 exit 0
