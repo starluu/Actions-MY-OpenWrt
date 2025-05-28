@@ -17,9 +17,10 @@ rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 
 # 卸载顽固预装软件
 opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
+opkg --force-removal-of-dependent-packages --autoremove remove v2ray-core
 
 # 安装最新alist
-opkg install /etc/alist/packages_ci/*.ipk  --force-depends
+opkg install /etc/alist/*.ipk  --force-depends
 rm -rf /etc/alist/*
 
 exit 0
