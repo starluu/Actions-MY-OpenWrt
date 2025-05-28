@@ -8,7 +8,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/releases/21.02-SNAPSHOT/targets/x86/generic/immortalwrt-imagebuilder-21.02-SNAPSHOT-x86-generic.Linux-x86_64.tar.xz"
-x86_url=$(curl -s https://api.github.com/repos/sbwml/luci-app-alist/releases/latest | grep "browser_download_url.*openwrt-21.02-i386_pentium4.tar.gz" | cut -d '"' -f 4)
+alist_url=$(curl -s https://api.github.com/repos/sbwml/luci-app-alist/releases/latest | grep "browser_download_url.*openwrt-21.02-i386_pentium4.tar.gz" | cut -d '"' -f 4)
 
 # config package
 unused_packages="-luci-app-filetransfer"
@@ -30,7 +30,7 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
-    wget -P files/etc/alist ${x86_url}
+    wget -P files/etc/alist ${alist_url}
     cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz
     cd ${imagebuilder_path}
