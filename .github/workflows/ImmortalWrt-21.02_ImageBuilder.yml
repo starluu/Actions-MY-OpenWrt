@@ -15,7 +15,7 @@ jobs:
       - name: Run make-immortalwrt-21.02
         run: |
           sudo apt update
-          sudo apt install qemu-utils mkisofs        
+          sudo apt install gh qemu-utils mkisofs        
           sudo chmod +x make-immortalwrt-21.02
           sudo ./make-immortalwrt-21.02
           sudo timedatectl set-timezone Asia/Shanghai
