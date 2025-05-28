@@ -29,8 +29,7 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
-    x86_url=$(curl -s https://api.github.com/repos/sbwml/luci-app-alist/releases/latest | grep "browser_download_url.*openwrt-21.02-i386_pentium4.tar.gz" | cut -d '"' -f 4)
-    curl -LO $x86_url
+    gh release download --repo sbwml/luci-app-alist --pattern '*.openwrt-21.02-i386_pentium4.tar.gz' --latest
     tar files/etc/alist -xvzf openwrt-21.02-i386_pentium4.tar.gz
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
