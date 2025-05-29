@@ -32,10 +32,10 @@ build_firmware () {
     cd ${imagebuilder_path}
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/immortalwrt/99-custom.sh
     wget -P files/etc/opkg https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/immortalwrt/distfeeds.conf
+    wget -P files/etc/passwall ${passwall_repo}
     wget -P files/etc/alist ${alist_repo}
     cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz && rm -f openwrt-21.02-i386_pentium4.tar.gz
-    wget -P packages_ci ${passwall_repo}
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
