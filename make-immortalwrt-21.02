@@ -34,6 +34,7 @@ build_firmware () {
     wget -P files/etc/alist ${alist_repo}
     cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz && rm -f openwrt-21.02-i386_pentium4.tar.gz
+    gh release download --repo xiaorouji/openwrt-passwall --pattern '*.ipk' --latest
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
