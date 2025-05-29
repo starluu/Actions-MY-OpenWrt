@@ -14,7 +14,7 @@ alist_repo=$(curl -s https://api.github.com/repos/sbwml/luci-app-alist/releases/
 unused_packages="-luci-app-filetransfer"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-compat luci-lib-base luci-lib-fs luci-lib-ipkg luci-i18n-argon-config-zh-cn"
-my_packages="${default_luci} luci-i18n-passwall-zh-cn naiveproxy luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-turboacc-zh-cn kmod-fast-classifier kmod-shortcut-fe-cm ${driver_packages} ${unused_packages}"
+my_packages="${default_luci} naiveproxy luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn luci-i18n-turboacc-zh-cn kmod-fast-classifier kmod-shortcut-fe-cm ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -30,11 +30,11 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
-    wget -P files/etc/alist https://github.com/SagerNet/sing-box/releases/download/v1.12.0-beta.19/sing-box_1.12.0-beta.19_openwrt_i386_pentium4.ipk 
     wget -P files/etc/alist ${alist_repo}
     cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz && rm -f openwrt-21.02-i386_pentium4.tar.gz
-    gh release download --repo xiaorouji/openwrt-passwall --pattern '*.ipk' --latest
+    wget -P files/etc/alist/packages_ci https://github.com/xiaorouji/openwrt-passwall/releases/download/25.5.16-1/luci-19.07_luci-app-passwall_25.5.16-1_all.ipk
+    wget -P files/etc/alist/packages_ci https://github.com/xiaorouji/openwrt-passwall/releases/download/25.5.16-1/luci-19.07_luci-i18n-passwall-zh-cn_25.5.16-1_all.ipk
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
