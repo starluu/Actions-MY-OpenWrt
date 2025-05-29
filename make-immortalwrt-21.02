@@ -14,8 +14,8 @@ passwall_repo=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/
 # config package
 unused_packages="-luci-app-filetransfer"
 driver_packages=""
-default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-compat luci-lib-base luci-lib-fs luci-lib-ipkg iptables-mod-tproxy iptables-mod-iprange iptables-mod-conntrack-extra luci-i18n-argon-config-zh-cn"
-my_packages="${default_luci} naiveproxy luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-diskman-zh-cn luci-i18n-turboacc-zh-cn kmod-fast-classifier kmod-shortcut-fe-cm ${driver_packages} ${unused_packages}"
+default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-i18n-argon-config-zh-cn"
+my_packages="${default_luci} naiveproxy luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-diskman-zh-cn luci-i18n-turboacc-zh-cn ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
