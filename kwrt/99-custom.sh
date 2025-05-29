@@ -18,7 +18,9 @@ rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 # 卸载顽固预装软件
 opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
 
-# 安装最新alist
+# 安装最新alist及其他app
+opkg update
 opkg install /etc/alist/packages_ci/*.ipk  --force-depends
+rm -rf /etc/alist/*
 
 exit 0
