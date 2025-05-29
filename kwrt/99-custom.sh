@@ -18,6 +18,10 @@ rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 # 卸载顽固预装软件
 opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
 
+# 修改国内软件源
+sed -i 's/mirrors.vsean.net/mirror.nju.edu.cn/g' /etc/opkg/distfeeds.conf
+sed -i 's/openwrt/immortalwrt/g' /etc/opkg/distfeeds.conf
+
 # 安装最新alist及其他app
 opkg update
 opkg install /etc/alist/packages_ci/*.ipk  --force-depends
