@@ -9,6 +9,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/releases/21.02-SNAPSHOT/targets/x86/generic/immortalwrt-imagebuilder-21.02-SNAPSHOT-x86-generic.Linux-x86_64.tar.xz"
 alist_repo=$(curl -s https://api.github.com/repos/sbwml/luci-app-alist/releases/latest | grep "browser_download_url.*openwrt-21.02-i386_pentium4.tar.gz" | cut -d '"' -f 4)
+passwall_repo=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/releases/latest | grep "browser_download_url.*luci-19.07.*.ipk" | cut -d '"' -f 4)
 
 # config package
 unused_packages="-luci-app-filetransfer"
@@ -33,8 +34,7 @@ build_firmware () {
     wget -P files/etc/alist ${alist_repo}
     cd ./files/etc/alist
     tar -xvzf openwrt-21.02-i386_pentium4.tar.gz && rm -f openwrt-21.02-i386_pentium4.tar.gz
-    wget -P files/etc/alist/packages_ci https://github.com/xiaorouji/openwrt-passwall/releases/download/25.5.16-1/luci-19.07_luci-app-passwall_25.5.16-1_all.ipk
-    wget -P files/etc/alist/packages_ci https://github.com/xiaorouji/openwrt-passwall/releases/download/25.5.16-1/luci-19.07_luci-i18n-passwall-zh-cn_25.5.16-1_all.ipk
+    wget -P files/etc/alist/packages_ci ${passwall_repo}
     cd ${imagebuilder_path}
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
