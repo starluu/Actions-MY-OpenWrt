@@ -13,7 +13,7 @@ uci add_list network.lan.dns='192.168.1.2'
 uci commit
 
 # 修改国内软件源
-sed -i 's/mirrors.vsean.net/mirror.nju.edu.cn/g' /etc/opkg/distfeeds.conf
+sed -i 's/mirrors.vsean.net/mirrors.shanghaitech.edu.cn/g' /etc/opkg/distfeeds.conf
 sed -i 's/openwrt/immortalwrt/g' /etc/opkg/distfeeds.conf
 
 # 安装最新alist及其他app
