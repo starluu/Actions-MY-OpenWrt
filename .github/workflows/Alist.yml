@@ -31,7 +31,7 @@ jobs:
         # 启动隧道
         ./cpolar http 9000 > /dev/null &
         
-    - name: 启动比扬云容器和portainer
+    - name: 启动portainer容器
       run: |
         docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
 
