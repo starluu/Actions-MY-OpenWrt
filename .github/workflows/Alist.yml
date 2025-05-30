@@ -63,20 +63,10 @@ jobs:
            exit 1
          fi
     # ========== 第二阶段：输入验证 ==========
-    - name: 验证输入参数
+    - name: 输入参数
       run: |
-        # 验证URL格式
-        if [[ ! "${{ github.event.inputs.download_url }}" =~ ^https?:// ]]; then
-          echo "❌ 错误：非法的URL格式，必须以 http:// 或 https:// 开头"
-          exit 1
-        fi
-
         # 标准化云端路径格式
-        CLOUD_PATH="${{ github.event.inputs.cloud_path || '/自动备份/'}}"
-        if [[ ! "$CLOUD_PATH" =~ /$ ]]; then
-          CLOUD_PATH="${CLOUD_PATH}/"  # 确保路径以/结尾
-        fi
-        echo "CLOUD_PATH=${CLOUD_PATH}" >> $GITHUB_ENV
+        CLOUD_PATH="${{ github.event.inputs.cloud_path || '[/网盘路径](/文件夹路径)'}}"
 
     # ========== 第四阶段：文件下载 ==========
     - name: 智能下载文件
@@ -95,7 +85,7 @@ jobs:
               ["'"$RAW_URL"'"],
               {
                 "dir": "/opt/alist/data/downloads",
-                "out": "'"RAW_URL"'",
+                "out": "RAW_URL CLOUD_PATH",
                 "split": "10",
                 "max-connection-per-server": "8",
                 "allow-overwrite": "true"
