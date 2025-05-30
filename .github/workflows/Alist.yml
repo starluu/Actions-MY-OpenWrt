@@ -26,7 +26,7 @@ jobs:
           -p 6800:6800 \
           -e PASSWORD=${{ secrets.ALIST_ADMIN_PW }} \
           -e ARIA2_SECRET=${{ secrets.ARIA2_TOKEN }} \
-          xhofe/alist:aio
+          xhofe/alist:latest-aio
         sleep 20  # 等待服务启动
 
     # ========== 第二阶段：输入验证 ==========
