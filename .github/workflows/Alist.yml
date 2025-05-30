@@ -30,11 +30,6 @@ jobs:
         
         # 启动隧道
         ./cpolar http 5244 > /dev/null &
-
-        # 获取公共 URL
-        sleep 3
-        CPOLAR_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
-        echo "ALIST_PUBLIC_URL=$CPOLAR_URL" >> $GITHUB_ENV
         
     - name: 使用 Ngrok 暴露端口
       run: |
