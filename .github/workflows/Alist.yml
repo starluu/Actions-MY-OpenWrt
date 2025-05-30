@@ -61,7 +61,7 @@ jobs:
           -H "Content-Type: application/json" \
           -d '{
             "mount_path": "/tianyi-cloud",
-            "driver": "189Cloud",
+            "driver": "Cloud189",
             "username": "'"$TIANYI_USER"'",
             "password": "'"$TIANYI_PASS"'",
             "root_folder": "'"$CLOUD_PATH"'"
