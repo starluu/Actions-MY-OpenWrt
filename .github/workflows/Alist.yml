@@ -51,19 +51,19 @@ jobs:
           echo "👉 请访问 http://localhost:5244 完成配置"
         sleep 1h  # 预留1小时手动操作时间
 
-   - name: 验证存储配置
-     run: |
-       TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
-        -H "Content-Type: application/json" \
-        -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
+    - name: 验证存储配置
+      run: |
+        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
+         -H "Content-Type: application/json" \
+         -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
         
-        # 检查存储是否激活
-        if curl -s http://localhost:5244/api/admin/storage/list -H "Authorization: $TOKEN" | grep -q "work"; then
-          echo "✅ 存储配置成功"
-         else
-          echo "❌ 存储未激活，请检查日志"
-          exit 1
-        fi
+         # 检查存储是否激活
+         if curl -s http://localhost:5244/api/admin/storage/list -H "Authorization: $TOKEN" | grep -q "work"; then
+           echo "✅ 存储配置成功"
+          else
+           echo "❌ 存储未激活，请检查日志"
+           exit 1
+         fi
     # ========== 第二阶段：输入验证 ==========
     - name: 验证输入参数
       run: |
