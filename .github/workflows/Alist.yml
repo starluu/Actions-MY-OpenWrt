@@ -45,7 +45,7 @@ jobs:
         
         # 获取公共 URL
         sleep 3
-        NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+        NGROK_URL=$(curl -s localhost:8080/api/tunnels | jq -r '.tunnels[0].public_url')
         echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
         echo "🌐 Alist 已暴露在公网: $NGROK_URL"
         
