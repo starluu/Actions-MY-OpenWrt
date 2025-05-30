@@ -45,67 +45,12 @@ jobs:
           -p 6800:6800 \
           ykxvk8yl5l/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
+          echo "🌐 Alist 已暴露在公网: $NGROK_URL"
           echo "⏳ 等待手动配置天翼云存储..."
-          echo "👉 预留16分钟手动操作时间"
-        sleep 16m
+          echo "👉 预留6小时手动操作时间"
+        sleep 6h
 
-    - name: 验证存储配置
-      run: |
-        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
-         -H "Content-Type: application/json" \
-         -d '{"username": "admin", "password": "'"admin"'"}' | jq -r .data.token)
-        
-         # 检查存储是否激活
-         if curl -s http://localhost:5244/api/admin/storage/list -H "Authorization: $TOKEN" | grep -q "work"; then
-           echo "✅ 存储配置成功"
-          else
-           echo "❌ 存储未激活，请检查日志"
-           exit 1
-         fi
-    # ========== 第二阶段：输入验证 ==========
-    - name: 输入参数
-      run: |
-        # 标准化云端路径格式
-        CLOUD_PATH="${{ github.event.inputs.cloud_path || '[/网盘路径](/文件夹路径)'}}"
-
-    # ========== 第四阶段：文件下载 ==========
-    - name: 智能下载文件
-      run: |
-        # 提取文件名并处理特殊字符
-        RAW_URL="${{ github.event.inputs.download_url }}"
-        
-        # 通过Aria2下载
-        curl -s http://localhost:6800/jsonrpc \
-          -H "Content-Type: application/json" \
-          -d '{
-            "jsonrpc": "2.0",
-            "id": "github-action",
-            "method": "aria2.addUri",
-            "params": [
-              ["RAW_URL CLOUD_PATH"],
-              {
-                "dir": "/opt/alist/data/downloads",
-                "split": "10",
-                "max-connection-per-server": "8",
-                "allow-overwrite": "true"
-              }
-            ]
-          }'
-
-        # 监控下载进度（最长等待6小时）
-        timeout 6h bash -c '
-          while true; do
-            STATUS=$(curl -s http://localhost:6800/jsonrpc \
-              -d "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"aria2.tellActive\",\"params\"\"]}")
-            if [ $(echo "$STATUS" | jq ".result | length") -eq 0 ]; then
-              break
-            fi
-            echo "⌛ 下载进度：$(echo "$STATUS" | jq ".result[0].completedLength")/$(echo "$STATUS" | jq ".result[0].totalLength")"
-            sleep 30
-          done
-        ' || echo "⚠️ 警告：下载任务可能未完成"
-
-    # ========== 第六阶段：收尾工作 ==========
+    # ========== 第二阶段：收尾工作 ==========
     - name: 清理和日志
       if: always()
       run: |
