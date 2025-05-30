@@ -17,22 +17,44 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
-        # 安装必要的工具
         apk update
         apk add jq curl
         
     - name: Start Alist service
       run: |
-        # 启动Alist服务
-        nohup ./alist server > /dev/null 2>&1 &
-        sleep 10  # 等待服务启动
+        # 启动Alist服务并确保在后台运行
+        nohup ./alist server > alist.log 2>&1 &
+        
+        # 等待服务完全启动
+        echo "等待Alist服务启动..."
+        sleep 15
+        
+        # 检查服务状态
+        if ! curl -s http://localhost:5244 >/dev/null; then
+          echo "::error::Alist服务启动失败，查看日志:"
+          cat alist.log
+          exit 1
+        fi
+        echo "Alist服务已成功启动"
 
     - name: Get admin password
       id: get_password
       run: |
         # 从日志中提取初始密码
-        password=$(cat data/log/log.log | grep "password" | awk '{print $NF}')
+        password=$(grep "password" alist.log | awk '{print $NF}' | tail -1)
+        
+        # 如果无法获取密码，尝试从数据目录获取
+        if [ -z "$password" ]; then
+          password=$(grep "password" data/log/log.log | awk '{print $NF}' | tail -1)
+        fi
+        
+        if [ -z "$password" ]; then
+          echo "::error::无法获取管理员密码"
+          exit 1
+        fi
+        
         echo "ALIST_PASSWORD=$password" >> $GITHUB_ENV
+        echo "获取到初始密码: $password"
 
     - name: Configure Tianyi Cloud storage
       env:
@@ -44,9 +66,19 @@ jobs:
           -H 'Content-Type: application/json' \
           -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}" | \
           jq -r '.data.token')
-
+        
+        if [ -z "$token" ] || [ "$token" = "null" ]; then
+          echo "::error::获取Token失败"
+          curl -s -X POST http://localhost:5244/api/auth/login \
+            -H 'Content-Type: application/json' \
+            -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}"
+          exit 1
+        fi
+        
+        echo "获取到Token: $token"
+        
         # 添加天翼云盘存储
-        curl -X POST http://localhost:5244/api/admin/storage \
+        response=$(curl -s -X POST http://localhost:5244/api/admin/storage \
           -H "Authorization: $token" \
           -H 'Content-Type: application/json' \
           -d "{
@@ -56,14 +88,34 @@ jobs:
             \"cache_expiration\": 30,
             \"status\": \"work\",
             \"addition\": \"{\\\"username\\\":\\\"$TIANYI_USER\\\",\\\"password\\\":\\\"$TIANYI_PWD\\\"}\"
-          }"
+          }")
+        
+        echo "存储添加响应: $response"
+        
+        # 检查是否添加成功
+        if echo "$response" | grep -q '"message":"success"'; then
+          echo "天翼云盘存储添加成功"
+        else
+          echo "::error::存储添加失败"
+          exit 1
+        fi
 
     - name: Download file with Aria2
       run: |
+        # 创建下载目录
+        mkdir -p /opt/alist/data/downloads
+        
         # 使用内置的Aria2下载文件
         aria2c -d /opt/alist/data/downloads \
           -o downloaded_file \
           "${{ github.event.inputs.file_url || secrets.DOWNLOAD_URL }}"
+        
+        # 检查文件是否下载成功
+        if [ ! -f "/opt/alist/data/downloads/downloaded_file" ]; then
+          echo "::error::文件下载失败"
+          exit 1
+        fi
+        echo "文件下载成功"
 
     - name: Upload to Tianyi Cloud
       env:
@@ -74,24 +126,49 @@ jobs:
           -H 'Content-Type: application/json' \
           -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}" | \
           jq -r '.data.token')
-
+        
         # 通过API上传文件
-        curl -X POST http://localhost:5244/api/fs/put \
+        response=$(curl -s -X POST http://localhost:5244/api/fs/put \
           -H "Authorization: $token" \
           -F "file=@/opt/alist/data/downloads/downloaded_file" \
-          -F "path=/tianyi"
-
+          -F "path=/tianyi")
+        
+        echo "上传响应: $response"
+        
+        # 获取任务ID
+        task_id=$(echo "$response" | jq -r '.data.task_id')
+        if [ -z "$task_id" ] || [ "$task_id" = "null" ]; then
+          echo "::error::获取上传任务ID失败"
+          exit 1
+        fi
+        
         # 监控上传任务状态
-        while true; do
+        echo "监控上传任务: $task_id"
+        for i in {1..30}; do
           status=$(curl -s -H "Authorization: $token" \
-            http://localhost:5244/api/admin/task/upload | jq '.data[0].status')
+            "http://localhost:5244/api/admin/task/upload/$task_id" | \
+            jq -r '.data.status')
           
-          if [[ "$status" == '"completed"' ]]; then
-            echo "Upload completed successfully"
+          if [ "$status" = "completed" ]; then
+            echo "上传完成"
             break
-          elif [[ "$status" == '"error"' ]]; then
-            echo "Upload failed" >&2
+          elif [ "$status" = "error" ]; then
+            echo "::error::上传失败"
             exit 1
           fi
+          
+          echo "任务状态 ($i/30): $status, 等待10秒..."
           sleep 10
         done
+        
+        if [ "$status" != "completed" ]; then
+          echo "::error::上传超时"
+          exit 1
+        fi
+
+    - name: Clean up
+      if: always()
+      run: |
+        # 停止Alist服务
+        pkill alist || true
+        echo "清理完成"
