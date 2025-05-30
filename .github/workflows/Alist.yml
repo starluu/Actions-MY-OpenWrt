@@ -1,113 +1,91 @@
-name: Alist-AIO 自动化传输
+name: Download and Upload to Tianyi Cloud
 
 on:
   workflow_dispatch:
     inputs:
-      download_url:
-        description: "🔗 要下载的文件URL (必须 http/https 开头)"
+      file_url:
+        description: 'File URL to download'
         required: true
-        default: "https://example.com/demo-file.zip"
-      cloud_path:
-        description: "☁️ 天翼云保存路径 (如 /备份/2024/)"
-        required: false
-        default: "/自动备份/"
-  schedule:
-    - cron: '0 0 * * *'  # 每日UTC 0点自动运行
 
 jobs:
-  alist-automation:
+  process:
     runs-on: ubuntu-latest
+    container:
+      image: xhofe/alist:latest-aio
+      options: --dns=8.8.8.8 -v /tmp/data:/opt/alist/data
+
     steps:
-    # ========== 第一阶段：容器初始化 ==========
-    - name: 启动Alist-AIO容器
+    - name: Start Alist service
       run: |
-        docker run -d --name alist-aio \
-          -p 5244:5244 \
-          -p 6800:6800 \
-          xhofe/alist:latest-aio
-          docker exec alist-aio ./alist admin set ${{ secrets.ALIST_ADMIN_PW }}
-        sleep 20  # 等待服务启动
+        # 启动Alist服务
+        nohup ./alist server > /dev/null 2>&1 &
+        sleep 10  # 等待服务启动
 
-    # ========== 第二阶段：输入验证 ==========
-    - name: 验证输入参数
+    - name: Get admin password
+      id: get_password
       run: |
-        # 验证URL格式
-        if [[ ! "${{ github.event.inputs.download_url }}" =~ ^https?:// ]]; then
-          echo "❌ 错误：非法的URL格式，必须以 http:// 或 https:// 开头"
-          exit 1
-        fi
+        # 从日志中提取初始密码
+        password=$(cat data/log/log.log | grep "password" | awk '{print $NF}')
+        echo "ALIST_PASSWORD=$password" >> $GITHUB_ENV
 
-        # 标准化云端路径格式
-        CLOUD_PATH="${{ github.event.inputs.cloud_path || '/自动备份/'}}"
-        if [[ ! "$CLOUD_PATH" =~ /$ ]]; then
-          CLOUD_PATH="${CLOUD_PATH}/"  # 确保路径以/结尾
-        fi
-        echo "CLOUD_PATH=${CLOUD_PATH}" >> $GITHUB_ENV
-
-    # ========== 第三阶段：存储配置 ==========
-    - name: 配置天翼云存储
+    - name: Configure Tianyi Cloud storage
       env:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
-        TIANYI_PASS: ${{ secrets.TIANYI_WEBDAV_PW }}
+        TIANYI_PWD: ${{ secrets.TIANYI_PASSWORD }}
       run: |
-        # 获取管理员Token
-        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
-          -H "Content-Type: application/json" \
-          -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
+        # 获取登录Token
+        token=$(curl -s -X POST http://localhost:5244/api/auth/login \
+          -H 'Content-Type: application/json' \
+          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}" | \
+          jq -r '.data.token')
 
-        # 动态创建存储配置
-        curl -X POST http://localhost:5244/api/admin/storage/create \
-          -H "Authorization: $TOKEN" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "mount_path": "/tianyi-cloud",
-            "driver": "Cloud189",
-            "username": "'"$TIANYI_USER"'",
-            "password": "'"$TIANYI_PASS"'",
-            "root_folder": "'"$CLOUD_PATH"'"
-          }'
+        # 添加天翼云盘存储
+        curl -X POST http://localhost:5244/api/admin/storage \
+          -H "Authorization: $token" \
+          -H 'Content-Type: application/json' \
+          -d "{
+            \"mount_path\": \"/tianyi\",
+            \"order\": 0,
+            \"driver\": \"Cloud189\",
+            \"cache_expiration\": 30,
+            \"status\": \"work\",
+            \"addition\": \"{\\\"username\\\":\\\"$TIANYI_USER\\\",\\\"password\\\":\\\"$TIANYI_PWD\\\"}\"
+          }"
 
-    # ========== 第四阶段：文件下载 ==========
-    - name: 智能下载文件
+    - name: Download file with Aria2
       run: |
-        # 提取文件名并处理特殊字符
-        RAW_URL="${{ github.event.inputs.download_url }}"
-        FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')  # 去除URL参数并解码空格
-        
-        # 通过Aria2下载
-        docker exec alist-aio /bin/bash
-        wget -P /opt/alist/data/downloads/$FILENAME ${RAW_URL}
-        
-    # ========== 第五阶段：文件上传 ==========
-    - name: 安全上传到天翼云
+        # 使用内置的Aria2下载文件
+        aria2c -d /opt/alist/data/downloads \
+          -o downloaded_file \
+          "${{ github.event.inputs.file_url || secrets.DOWNLOAD_URL }}"
+
+    - name: Upload to Tianyi Cloud
+      env:
+        ALIST_PASSWORD: ${{ env.ALIST_PASSWORD }}
       run: |
-        FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')
-        LOCAL_PATH="/opt/alist/data/downloads/$FILENAME"
+        # 获取登录Token
+        token=$(curl -s -X POST http://localhost:5244/api/auth/login \
+          -H 'Content-Type: application/json' \
+          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}" | \
+          jq -r '.data.token')
 
-        # 获取管理员Token
-        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
-          -H "Content-Type: application/json" \
-          -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
+        # 通过API上传文件
+        curl -X POST http://localhost:5244/api/fs/put \
+          -H "Authorization: $token" \
+          -F "file=@/opt/alist/data/downloads/downloaded_file" \
+          -F "path=/tianyi"
 
-        # 分块上传（适合大文件）
-        curl -X PUT http://localhost:5244/api/fs/form \
-          -H "Authorization: $TOKEN" \
-          -F "path=/tianyi-cloud/$FILENAME" \
-          -F "file=@$LOCAL_PATH" \
-          -F "chunk_index=0" \
-          -F "chunk_count=1"
-
-    # ========== 第六阶段：收尾工作 ==========
-    - name: 清理和日志
-      if: always()
-      run: |
-        # 获取容器日志
-        docker logs alist-aio > alist.log 2>&1
-
-        # 清理容器
-        docker stop alist-aio || true
-        docker rm alist-aio || true
-
-        # 上传日志供调试
-        echo "========== AList日志 =========="
-        cat alist.log
+        # 监控上传任务状态
+        while true; do
+          status=$(curl -s -H "Authorization: $token" \
+            http://localhost:5244/api/admin/task/upload | jq '.data[0].status')
+          
+          if [[ "$status" == '"completed"' ]]; then
+            echo "Upload completed successfully"
+            break
+          elif [[ "$status" == '"error"' ]]; then
+            echo "Upload failed" >&2
+            exit 1
+          fi
+          sleep 10
+        done
