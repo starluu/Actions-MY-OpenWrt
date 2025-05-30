@@ -67,44 +67,73 @@ jobs:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
         TIANYI_PWD: ${{ secrets.TIANYI_PASSWORD }}
       run: |
-        # 获取登录Token
-        token=$(curl -s -X POST http://localhost:5244/api/auth/login \
+        # 1. 验证Token有效性
+        echo "验证Token有效性..."
+        token_response=$(curl -s -X POST http://localhost:5244/api/auth/login \
           -H 'Content-Type: application/json' \
-          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}" | \
-          jq -r '.data.token')
+          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}")
         
-        if [ -z "$token" ] || [ "$token" = "null" ]; then
+        if ! echo "$token_response" | jq -e '.code == 200' >/dev/null; then
           echo "::error::获取Token失败"
-          curl -s -X POST http://localhost:5244/api/auth/login \
-            -H 'Content-Type: application/json' \
-            -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}"
+          echo "响应: $token_response"
           exit 1
         fi
         
-        echo "获取到Token: $token"
+        token=$(echo "$token_response" | jq -r '.data.token')
+        echo "获取到有效Token: $token"
         
-        # 添加天翼云盘存储
+        # 2. 检查当前存储配置
+        echo "检查现有存储配置..."
+        storage_list=$(curl -s -X GET http://localhost:5244/api/admin/storage/list \
+          -H "Authorization: $token")
+        
+        # 如果天翼云盘已配置，则跳过添加
+        if echo "$storage_list" | jq -e '.data[] | select(.mount_path == "/tianyi")' >/dev/null; then
+          echo "天翼云盘存储已存在，跳过添加"
+          exit 0
+        fi
+        
+        # 3. 添加天翼云盘存储
+        echo "添加天翼云盘存储..."
+        addition_json="{\"username\":\"$TIANYI_USER\",\"password\":\"$TIANYI_PWD\"}"
+        addition_escaped=$(echo "$addition_json" | jq -aRs . | sed 's/^"//;s/"$//')
+        
+        storage_payload=$(cat <<EOF
+        {
+          "mount_path": "/tianyi",
+          "order": 0,
+          "driver": "Cloud189",
+          "cache_expiration": 30,
+          "status": "work",
+          "addition": "$addition_escaped"
+        }
+        EOF
+        )
+        
         response=$(curl -s -X POST http://localhost:5244/api/admin/storage \
           -H "Authorization: $token" \
           -H 'Content-Type: application/json' \
-          -d "{
-            \"mount_path\": \"/tianyi\",
-            \"order\": 0,
-            \"driver\": \"Cloud189\",
-            \"cache_expiration\": 30,
-            \"status\": \"work\",
-            \"addition\": \"{\\\"username\\\":\\\"$TIANYI_USER\\\",\\\"password\\\":\\\"$TIANYI_PWD\\\"}\"
-          }")
+          -d "$storage_payload")
         
         echo "存储添加响应: $response"
         
-        # 检查是否添加成功
-        if echo "$response" | grep -q '"message":"success"'; then
-          echo "天翼云盘存储添加成功"
-        else
+        # 4. 验证添加结果
+        if ! echo "$response" | jq -e '.code == 200' >/dev/null; then
           echo "::error::存储添加失败"
+          
+          # 尝试获取更详细的错误信息
+          error_msg=$(echo "$response" | jq -r '.message // "未知错误"')
+          echo "错误信息: $error_msg"
+          
+          # 检查驱动是否可用
+          drivers=$(curl -s -X GET http://localhost:5244/api/admin/driver/list \
+            -H "Authorization: $token")
+          echo "可用驱动: $drivers"
+          
           exit 1
         fi
+        
+        echo "天翼云盘存储添加成功"
 
     - name: Download file with Aria2
       run: |
