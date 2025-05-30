@@ -1,261 +1,143 @@
-name: Download and Upload to Tianyi Cloud
+name: Alist-AIO 自动化传输
 
 on:
   workflow_dispatch:
     inputs:
-      file_url:
-        description: 'File URL to download'
+      download_url:
+        description: "🔗 要下载的文件URL (必须 http/https 开头)"
         required: true
+        default: "https://example.com/demo-file.zip"
+      cloud_path:
+        description: "☁️ 天翼云保存路径 (如 /备份/2024/)"
+        required: false
+        default: "/自动备份/"
+  schedule:
+    - cron: '0 0 * * *'  # 每日UTC 0点自动运行
 
 jobs:
-  process:
+  alist-automation:
     runs-on: ubuntu-latest
-    container:
-      image: xhofe/alist:latest-aio
-      options: --dns=8.8.8.8 -v /tmp/data:/opt/alist/data
-
     steps:
-    - name: Install dependencies
+    # ========== 第一阶段：容器初始化 ==========
+    - name: 启动Alist-AIO容器
       run: |
-        apk update
-        apk add jq curl python3
-        
-    - name: Start Alist service
+        docker run -d --name alist-aio \
+          -p 5244:5244 \
+          -p 6800:6800 \
+          -e PASSWORD=${{ secrets.ALIST_ADMIN_PW }} \
+          -e ARIA2_SECRET=${{ secrets.ARIA2_TOKEN }} \
+          xhofe/alist:aio
+        sleep 20  # 等待服务启动
+
+    # ========== 第二阶段：输入验证 ==========
+    - name: 验证输入参数
       run: |
-        # 使用绝对路径启动服务
-        nohup /opt/alist/alist server > /opt/alist/alist.log 2>&1 &       
-        
-    - name: Start Alist service
-      run: |
-        # 启动Alist服务并确保在后台运行
-        nohup ./alist server > alist.log 2>&1 &
-        
-        # 等待服务完全启动
-        echo "等待Alist服务启动..."
-        sleep 15
-        
-        # 检查服务状态
-        if ! curl -s http://localhost:5244 >/dev/null; then
-          echo "::error::Alist服务启动失败，查看日志:"
-          cat alist.log
+        # 验证URL格式
+        if [[ ! "${{ github.event.inputs.download_url }}" =~ ^https?:// ]]; then
+          echo "❌ 错误：非法的URL格式，必须以 http:// 或 https:// 开头"
           exit 1
         fi
-        echo "Alist服务已成功启动"
 
-    - name: Get admin password
-      id: get_password
-      run: |
-        cd /opt/alist
-        # 从日志中提取初始密码
-        password=$(grep "password" alist.log | awk '{print $NF}' | tail -1)
-        
-        # 如果无法获取密码，尝试从数据目录获取
-        if [ -z "$password" ]; then
-          password=$(grep "password" data/log/log.log | awk '{print $NF}' | tail -1)
+        # 标准化云端路径格式
+        CLOUD_PATH="${{ github.event.inputs.cloud_path || '/自动备份/'}"
+        if [[ ! "$CLOUD_PATH" =~ /$ ]]; then
+          CLOUD_PATH="${CLOUD_PATH}/"  # 确保路径以/结尾
         fi
-        
-        if [ -z "$password" ]; then
-          echo "::error::无法获取管理员密码"
-          exit 1
-        fi
-        
-        echo "ALIST_PASSWORD=$password" >> $GITHUB_ENV
-        echo "获取到初始密码: $password"
+        echo "CLOUD_PATH=${CLOUD_PATH}" >> $GITHUB_ENV
 
-    - name: Configure Tianyi Cloud storage
+    # ========== 第三阶段：存储配置 ==========
+    - name: 配置天翼云存储
       env:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
-        TIANYI_PWD: ${{ secrets.TIANYI_PASSWORD }}
+        TIANYI_PASS: ${{ secrets.TIANYI_WEBDAV_PW }}
       run: |
-        # 确保Python3已安装
-        if ! command -v python3 &> /dev/null; then
-          echo "::error::Python3未安装，正在尝试安装..."
-          apk add --no-cache python3
-        fi
-        
-        # 使用Python标准库处理API调用
-        python3 <<EOF
-        import os
-        import json
-        import urllib.request
-        import time
-        import sys
-        
-        # 配置参数
-        ALIST_URL = "http://localhost:5244"
-        ALIST_USER = "admin"
-        ALIST_PASS = os.environ['ALIST_PASSWORD']
-        TIANYI_USER = os.environ['TIANYI_USER']
-        TIANYI_PASS = os.environ['TIANYI_PWD']
-        
-        def log_error(message):
-            """记录错误信息并退出"""
-            print(f"::error::{message}", file=sys.stderr)
-            sys.exit(1)
-        
-        def api_request(url, method="GET", headers=None, data=None):
-            """发送API请求并返回解析后的JSON响应"""
-            try:
-                req = urllib.request.Request(
-                    url,
-                    data=data,
-                    headers=headers or {},
-                    method=method
-                )
-                
-                with urllib.request.urlopen(req) as response:
-                    response_content = response.read().decode('utf-8')
-                    
-                    # 调试输出
-                    print(f"API响应 ({response.status}): {response_content[:200]}")
-                    
-                    try:
-                        return json.loads(response_content)
-                    except json.JSONDecodeError:
-                        log_error(f"无法解析JSON响应: {response_content[:200]}")
-            
-            except urllib.error.HTTPError as e:
-                response_content = e.read().decode('utf-8')
-                log_error(f"HTTP错误 ({e.code}): {response_content[:200]}")
-            except Exception as e:
-                log_error(f"请求失败: {str(e)}")
-        
-        # 1. 获取Token
-        login_url = f"{ALIST_URL}/api/auth/login"
-        login_data = json.dumps({"username": ALIST_USER, "password": ALIST_PASS}).encode('utf-8')
-        login_headers = {'Content-Type': 'application/json'}
-        
-        token_response = api_request(login_url, "POST", login_headers, login_data)
-        
-        if token_response.get('code') != 200:
-            log_error(f"登录失败: {token_response.get('message', '未知错误')}")
-        
-        token = token_response['data']['token']
-        print(f"获取到Token: {token}")
-        
-        # 2. 检查现有存储配置
-        list_url = f"{ALIST_URL}/api/admin/storage/list"
-        list_headers = {'Authorization': token}
-        
-        storage_list = api_request(list_url, "GET", list_headers)
-        
-        if storage_list.get('code') != 200:
-            log_error(f"获取存储列表失败: {storage_list.get('message', '未知错误')}")
-        
-        # 修复点：正确获取存储列表
-        storage_data = storage_list.get('data', {})
-        storages = storage_data.get('content', [])
-        
-        if not isinstance(storages, list):
-            log_error(f"存储列表格式无效: {type(storages)}")
-        
-        print(f"找到 {len(storages)} 个存储")
-        
-        # 检查是否已存在天翼云盘存储
-        for storage in storages:
-            mount_path = storage.get('mount_path')
-            print(f"检查存储: {mount_path}")
-            if mount_path == '/tianyi':
-                print("天翼云盘存储已存在，跳过添加")
-                sys.exit(0)
-        
-        # 3. 添加天翼云盘存储
-        storage_data = {
-            "mount_path": "/tianyi",
-            "order": 0,
-            "driver": "Cloud189",
-            "cache_expiration": 30,
-            "status": "work",
-            "addition": json.dumps({
-                "username": TIANYI_USER,
-                "password": TIANYI_PASS
-            })
-        }
-        
-        add_url = f"{ALIST_URL}/api/admin/storage"
-        add_headers = {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-        }
-        add_data = json.dumps(storage_data).encode('utf-8')
-        
-        add_response = api_request(add_url, "POST", add_headers, add_data)
-        
-        if add_response.get('code') != 200:
-            log_error(f"添加存储失败: {add_response.get('message', '未知错误')}")
-        
-        print("天翼云盘存储添加成功")
-        EOF
+        # 获取管理员Token
+        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
+          -H "Content-Type: application/json" \
+          -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
 
-    - name: Download file with Aria2
+        # 动态创建存储配置
+        curl -X POST http://localhost:5244/api/admin/storage/create \
+          -H "Authorization: $TOKEN" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "mount_path": "/tianyi-cloud",
+            "driver": "189Cloud",
+            "username": "'"$TIANYI_USER"'",
+            "password": "'"$TIANYI_PASS"'",
+            "root_folder": "'"$CLOUD_PATH"'"
+          }'
+
+    # ========== 第四阶段：文件下载 ==========
+    - name: 智能下载文件
       run: |
-        # 创建下载目录
-        mkdir -p /opt/alist/data/downloads
+        # 提取文件名并处理特殊字符
+        RAW_URL="${{ github.event.inputs.download_url }}"
+        FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')  # 去除URL参数并解码空格
         
-        # 使用内置的Aria2下载文件
-        aria2c -d /opt/alist/data/downloads \
-          -o downloaded_file \
-          "${{ github.event.inputs.file_url || secrets.DOWNLOAD_URL }}"
-        
-        # 检查文件是否下载成功
-        if [ ! -f "/opt/alist/data/downloads/downloaded_file" ]; then
-          echo "::error::文件下载失败"
-          exit 1
-        fi
-        echo "文件下载成功"
+        # 通过Aria2下载
+        curl -s http://localhost:6800/jsonrpc \
+          -H "Content-Type: application/json" \
+          -d '{
+            "jsonrpc": "2.0",
+            "id": "github-action",
+            "method": "aria2.addUri",
+            "params": [
+              "token:${{ secrets.ARIA2_TOKEN }}",
+              ["'"$RAW_URL"'"],
+              {
+                "dir": "/opt/alist/data/downloads",
+                "out": "'"$FILENAME"'",
+                "split": "10",
+                "max-connection-per-server": "8",
+                "allow-overwrite": "true"
+              }
+            ]
+          }'
 
-    - name: Upload to Tianyi Cloud
-      env:
-        ALIST_PASSWORD: ${{ env.ALIST_PASSWORD }}
+        # 监控下载进度（最长等待6小时）
+        timeout 6h bash -c '
+          while true; do
+            STATUS=$(curl -s http://localhost:6800/jsonrpc \
+              -d "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"aria2.tellActive\",\"params\":[\"token:${{ secrets.ARIA2_TOKEN }}\"]}")
+            if [ $(echo "$STATUS" | jq ".result | length") -eq 0 ]; then
+              break
+            fi
+            echo "⌛ 下载进度：$(echo "$STATUS" | jq ".result[0].completedLength")/$(echo "$STATUS" | jq ".result[0].totalLength")"
+            sleep 30
+          done
+        ' || echo "⚠️ 警告：下载任务可能未完成"
+
+    # ========== 第五阶段：文件上传 ==========
+    - name: 安全上传到天翼云
       run: |
-        # 获取登录Token
-        token=$(curl -s -X POST http://localhost:5244/api/auth/login \
-          -H 'Content-Type: application/json' \
-          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}" | \
-          jq -r '.data.token')
-        
-        # 通过API上传文件
-        response=$(curl -s -X POST http://localhost:5244/api/fs/put \
-          -H "Authorization: $token" \
-          -F "file=@/opt/alist/data/downloads/downloaded_file" \
-          -F "path=/tianyi")
-        
-        echo "上传响应: $response"
-        
-        # 获取任务ID
-        task_id=$(echo "$response" | jq -r '.data.task_id')
-        if [ -z "$task_id" ] || [ "$task_id" = "null" ]; then
-          echo "::error::获取上传任务ID失败"
-          exit 1
-        fi
-        
-        # 监控上传任务状态
-        echo "监控上传任务: $task_id"
-        for i in {1..30}; do
-          status=$(curl -s -H "Authorization: $token" \
-            "http://localhost:5244/api/admin/task/upload/$task_id" | \
-            jq -r '.data.status')
-          
-          if [ "$status" = "completed" ]; then
-            echo "上传完成"
-            break
-          elif [ "$status" = "error" ]; then
-            echo "::error::上传失败"
-            exit 1
-          fi
-          
-          echo "任务状态 ($i/30): $status, 等待10秒..."
-          sleep 10
-        done
-        
-        if [ "$status" != "completed" ]; then
-          echo "::error::上传超时"
-          exit 1
-        fi
+        FILENAME=$(basename "${{ github.event.inputs.download_url }}" | sed 's/%20/ /g')
+        LOCAL_PATH="/opt/alist/data/downloads/$FILENAME"
 
-    - name: Clean up
+        # 获取管理员Token
+        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
+          -H "Content-Type: application/json" \
+          -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
+
+        # 分块上传（适合大文件）
+        curl -X PUT http://localhost:5244/api/fs/form \
+          -H "Authorization: $TOKEN" \
+          -F "path=/tianyi-cloud/$FILENAME" \
+          -F "file=@$LOCAL_PATH" \
+          -F "chunk_index=0" \
+          -F "chunk_count=1"
+
+    # ========== 第六阶段：收尾工作 ==========
+    - name: 清理和日志
       if: always()
       run: |
-        # 停止Alist服务
-        pkill alist || true
-        echo "清理完成"
+        # 获取容器日志
+        docker logs alist-aio > alist.log 2>&1
+
+        # 清理容器
+        docker stop alist-aio || true
+        docker rm alist-aio || true
+
+        # 上传日志供调试
+        echo "========== AList日志 =========="
+        cat alist.log
