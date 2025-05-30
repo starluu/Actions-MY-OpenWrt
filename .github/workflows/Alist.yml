@@ -39,7 +39,7 @@ jobs:
         fi
 
         # 标准化云端路径格式
-        CLOUD_PATH="${{ github.event.inputs.cloud_path || '/自动备份/'}"
+        CLOUD_PATH="${{ github.event.inputs.cloud_path || '/自动备份/'}}"
         if [[ ! "$CLOUD_PATH" =~ /$ ]]; then
           CLOUD_PATH="${CLOUD_PATH}/"  # 确保路径以/结尾
         fi
