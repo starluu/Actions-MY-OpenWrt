@@ -52,7 +52,7 @@ jobs:
         TIANYI_PASS: ${{ secrets.TIANYI_WEBDAV_PW }}
       run: |
         # 获取管理员Token
-        docker exec -it alist ./alist admin set ${{ secrets.ALIST_ADMIN_PW }}
+        docker exec -it alist-aio ./alist admin set ${{ secrets.ALIST_ADMIN_PW }}
         TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
           -H "Content-Type: application/json" \
           -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
