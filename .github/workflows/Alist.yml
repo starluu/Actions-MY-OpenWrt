@@ -111,7 +111,7 @@ jobs:
     # ========== 第五阶段：文件上传 ==========
     - name: 安全上传到天翼云
       run: |
-        FILENAME=$(basename "${{ github.event.inputs.download_url }}" | sed 's/%20/ /g')
+        FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')
         LOCAL_PATH="/opt/alist/data/downloads/$FILENAME"
 
         # 获取管理员Token
