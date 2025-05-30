@@ -31,23 +31,23 @@ jobs:
         # 启动隧道
         ./cpolar http 5244 > /dev/null &
         
-    - name: 使用 Ngrok 暴露端口
-      run: |
-        # 下载 ngrok
-        wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-        tar xvzf ngrok-v3-stable-linux-amd64.tgz
-        
-        # 设置认证令牌（在 https://dashboard.ngrok.com 获取）
-        ./ngrok authtoken ${{ secrets.NGROK_TOKEN }}
-        
-        # 启动隧道
-        ./ngrok http 5244 > /dev/null &
-        
-        # 获取公共 URL
-        sleep 3
-        NGROK_URL=$(curl -s localhost:8080/api/tunnels | jq -r '.tunnels[0].public_url')
-        echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
-        echo "🌐 Alist 已暴露在公网: $NGROK_URL"
+- name: 使用 Ngrok 暴露端口
+  run: |
+    # 下载 ngrok
+    wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+    tar xvzf ngrok-v3-stable-linux-amd64.tgz
+    
+    # 设置认证令牌（在 https://dashboard.ngrok.com 获取）
+    ./ngrok authtoken ${{ secrets.NGROK_TOKEN }}
+    
+    # 启动隧道
+    ./ngrok http 5244 > /dev/null &
+    
+    # 获取公共 URL
+    sleep 5
+    NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+    echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
+    echo "🌐 Alist 已暴露在公网: $NGROK_URL"
         
     # ========== 第一阶段：容器初始化 ==========
     - name: 启动Alist-AIO容器
