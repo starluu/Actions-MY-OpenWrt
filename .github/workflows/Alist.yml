@@ -46,8 +46,8 @@ jobs:
           xhofe/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
           echo "⏳ 等待手动配置天翼云存储..."
-          echo "👉 预留6分钟手动操作时间"
-        sleep 6m  # 预留6分钟手动操作时间
+          echo "👉 预留16分钟手动操作时间"
+        sleep 16m
 
     - name: 验证存储配置
       run: |
