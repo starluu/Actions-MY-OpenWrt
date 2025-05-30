@@ -45,9 +45,19 @@ jobs:
           -p 6800:6800 \
           xhofe/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
-          echo "⏳ 等待手动配置天翼云存储..."
-          echo "👉 请访问 http://localhost:5244 完成配置"
-        sleep 1h  # 预留1小时手动操作时间
+          
+    - name: 等待手动配置
+      run: |
+        echo "👉 访问地址: ${{ env.NGROK_URL }}"
+        echo "⏳ 正在监听配置状态..."
+        while ! curl -s http://localhost:5244/api/admin/storage/list \
+          -H "Authorization: $(curl -s -X POST http://localhost:5244/api/auth/login -d '{\"username\":\"admin\",\"password\":\"admin\"}' | jq -r .data.token)" \
+          | grep -q '"driver":"189CloudPC"'; do
+          sleep 30
+        done
+
+    - name: 继续执行
+      run: echo "🚀 检测到配置完成，继续流程..."
 
     - name: 验证存储配置
       run: |
