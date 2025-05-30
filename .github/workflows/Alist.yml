@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # ========== 初始阶段：内网穿透 ==========
-        - name: 使用 cpolar 暴露端口Add commentMore actions
+    - name: 使用 cpolar 暴露端口Add commentMore actions
       run: |
         # 下载 cpolar
         wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
