@@ -67,98 +67,76 @@ jobs:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
         TIANYI_PWD: ${{ secrets.TIANYI_PASSWORD }}
       run: |
-        # 1. 验证Token有效性
-        echo "验证Token有效性..."
-        token_response=$(curl -s -X POST http://localhost:5244/api/auth/login \
-          -H 'Content-Type: application/json' \
-          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}")
+        # 安装Python依赖
+        apk add python3 py3-pip
+        pip3 install requests
         
-        echo "登录响应: $token_response"
+        # 使用Python脚本处理API调用
+        python3 <<EOF
+        import os
+        import requests
+        import json
+        import time
         
-        if ! echo "$token_response" | jq -e '.code == 200' >/dev/null; then
-          echo "::error::获取Token失败"
-          exit 1
-        fi
+        # 配置参数
+        ALIST_URL = "http://localhost:5244"
+        ALIST_USER = "admin"
+        ALIST_PASS = os.environ['ALIST_PASSWORD']
+        TIANYI_USER = os.environ['TIANYI_USER']
+        TIANYI_PASS = os.environ['TIANYI_PWD']
         
-        token=$(echo "$token_response" | jq -r '.data.token')
-        echo "获取到有效Token: $token"
+        # 1. 获取Token
+        login_url = f"{ALIST_URL}/api/auth/login"
+        login_data = {"username": ALIST_USER, "password": ALIST_PASS}
+        response = requests.post(login_url, json=login_data)
         
-        # 2. 检查当前存储配置 - 使用更可靠的查询
-        echo "检查现有存储配置..."
-        storage_list=$(curl -s -X GET http://localhost:5244/api/admin/storage/list \
-          -H "Authorization: $token")
+        if response.status_code != 200:
+            print(f"::error::登录失败: {response.status_code} - {response.text}")
+            exit(1)
         
-        echo "存储列表响应: $storage_list"
+        token = response.json()['data']['token']
+        print(f"获取到Token: {token}")
         
-        # 调整查询方式以适应API响应结构
-        if echo "$storage_list" | jq -e '.data | any(.mount_path == "/tianyi")' >/dev/null; then
-          echo "天翼云盘存储已存在，跳过添加"
-          exit 0
-        fi
+        # 2. 检查现有存储
+        headers = {"Authorization": token}
+        list_url = f"{ALIST_URL}/api/admin/storage/list"
+        response = requests.get(list_url, headers=headers)
         
-        # 3. 确保Cloud189驱动可用
-        echo "检查Cloud189驱动是否可用..."
-        drivers=$(curl -s -X GET http://localhost:5244/api/admin/driver/list \
-          -H "Authorization: $token")
+        if response.status_code != 200:
+            print(f"::error::获取存储列表失败: {response.status_code} - {response.text}")
+            exit(1)
         
-        if ! echo "$drivers" | jq -e '.drivers | any(.name == "Cloud189")' >/dev/null; then
-          echo "::error::Cloud189驱动不可用"
-          echo "可用驱动:"
-          echo "$drivers" | jq '.drivers[].name'
-          exit 1
-        fi
+        storages = response.json().get('data', [])
+        if any(storage['mount_path'] == '/tianyi' for storage in storages):
+            print("天翼云盘存储已存在，跳过添加")
+            exit(0)
         
-        # 4. 使用更可靠的JSON构建方法
-        echo "添加天翼云盘存储..."
-        addition_json="{\"username\":\"$TIANYI_USER\",\"password\":\"$TIANYI_PWD\"}"
+        # 3. 添加存储
+        storage_data = {
+            "mount_path": "/tianyi",
+            "order": 0,
+            "driver": "Cloud189",
+            "cache_expiration": 30,
+            "status": "work",
+            "addition": json.dumps({
+                "username": TIANYI_USER,
+                "password": TIANYI_PASS
+            })
+        }
         
-        # 使用jq构建完整的payload
-        storage_payload=$(jq -n \
-          --arg mount_path "/tianyi" \
-          --arg driver "Cloud189" \
-          --argjson cache_expiration 30 \
-          --arg status "work" \
-          --arg addition "$addition_json" \
-          '{
-            mount_path: $mount_path,
-            order: 0,
-            driver: $driver,
-            cache_expiration: $cache_expiration,
-            status: $status,
-            addition: $addition
-          }')
+        add_url = f"{ALIST_URL}/api/admin/storage"
+        response = requests.post(add_url, headers=headers, json=storage_data)
         
-        echo "存储负载: $storage_payload"
+        if response.status_code != 200:
+            print(f"::error::添加存储失败: {response.status_code} - {response.text}")
+            exit(1)
         
-        # 5. 添加存储并检查响应
-        response=$(curl -i -s -X POST http://localhost:5244/api/admin/storage \
-          -H "Authorization: $token" \
-          -H 'Content-Type: application/json' \
-          -d "$storage_payload")
+        if response.json().get('code') != 200:
+            print(f"::error::添加存储失败: {response.json().get('message', '未知错误')}")
+            exit(1)
         
-        # 分离响应头和响应体
-        response_header=$(echo "$response" | awk 'NR>1 && /^\r?$/{exit} {print}')
-        response_body=$(echo "$response" | awk 'BEGIN{p=0} /^\r?$/{p=1} p')
-        
-        echo "存储添加响应头: $response_header"
-        echo "存储添加响应体: $response_body"
-        
-        # 6. 验证添加结果
-        if ! echo "$response_body" | jq -e '.code == 200' >/dev/null; then
-          echo "::error::存储添加失败"
-          
-          # 尝试获取更详细的错误信息
-          error_msg=$(echo "$response_body" | jq -r '.message // "未知错误"')
-          echo "错误信息: $error_msg"
-          
-          # 检查Alist日志获取更多信息
-          echo "Alist日志最后20行:"
-          tail -20 alist.log
-          
-          exit 1
-        fi
-        
-        echo "天翼云盘存储添加成功"
+        print("天翼云盘存储添加成功")
+        EOF
 
     - name: Download file with Aria2
       run: |
