@@ -46,10 +46,24 @@ jobs:
           -e PASSWORD=${{ secrets.ALIST_ADMIN_PW }} \
           -e ARIA2_SECRET=${{ secrets.ARIA2_TOKEN }} \
           xhofe/alist:latest-aio
+          docker exec alist-aio ./alist admin set ${{ secrets.ALIST_ADMIN_PW }}
           echo "⏳ 等待手动配置天翼云存储..."
           echo "👉 请访问 http://localhost:5244 完成配置"
         sleep 1h  # 预留1小时手动操作时间
+
+   - name: 验证存储配置
+     run: |
+       TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
+        -H "Content-Type: application/json" \
+        -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
         
+        # 检查存储是否激活
+        if curl -s http://localhost:5244/api/admin/storage/list -H "Authorization: $TOKEN" | grep -q "work"; then
+          echo "✅ 存储配置成功"
+         else
+          echo "❌ 存储未激活，请检查日志"
+          exit 1
+        fi
     # ========== 第二阶段：输入验证 ==========
     - name: 验证输入参数
       run: |
@@ -65,30 +79,6 @@ jobs:
           CLOUD_PATH="${CLOUD_PATH}/"  # 确保路径以/结尾
         fi
         echo "CLOUD_PATH=${CLOUD_PATH}" >> $GITHUB_ENV
-
-    # ========== 第三阶段：存储配置 ==========
-    - name: 配置天翼云存储
-      env:
-        TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
-        TIANYI_PASS: ${{ secrets.TIANYI_WEBDAV_PW }}
-      run: |
-        # 获取管理员Token
-        docker exec alist-aio ./alist admin set ${{ secrets.ALIST_ADMIN_PW }}
-        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
-          -H "Content-Type: application/json" \
-          -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
-
-        # 动态创建存储配置
-        curl -X POST http://localhost:5244/api/admin/storage/create \
-          -H "Authorization: $TOKEN" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "mount_path": "/tianyi-cloud",
-            "driver": "189CloudPC",
-            "username": "'"$TIANYI_USER"'",
-            "password": "'"$TIANYI_PASS"'",
-            "root_folder": "'"$CLOUD_PATH"'"
-          }'
 
     # ========== 第四阶段：文件下载 ==========
     - name: 智能下载文件
