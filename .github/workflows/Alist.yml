@@ -43,7 +43,7 @@ jobs:
         docker run -d --name alist-aio \
           -p 5244:5244 \
           -p 6800:6800 \
-          ykxvk8yl5l/alist:latest-aio
+          xhofe/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
           echo "🌐 Alist 已暴露在公网: $NGROK_URL"
           echo "⏳ 等待手动配置天翼云存储..."
