@@ -10,7 +10,7 @@ on:
       cloud_path:
         description: "☁️ 天翼云保存路径"
         required: false
-        default: "[/网盘路径](/文件夹路径)"
+        default: "[/ty](/离线下载)"
   schedule:
     - cron: '0 0 * * *'  # 每日UTC 0点自动运行
 
