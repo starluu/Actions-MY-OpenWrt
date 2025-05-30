@@ -35,7 +35,6 @@ jobs:
         sleep 5
         NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
         echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
-        echo "🌐 Alist 已暴露在公网: $NGROK_URL"
         
     # ========== 第一阶段：容器初始化 ==========
     - name: 启动Alist-AIO容器
@@ -45,6 +44,7 @@ jobs:
           -p 6800:6800 \
           xhofe/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
+          echo "🌐 Alist 已暴露在公网: $NGROK_URL"
           echo "⏳ 等待手动配置天翼云存储..."
           echo "👉 预留16分钟手动操作时间"
         sleep 16m
