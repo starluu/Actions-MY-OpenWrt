@@ -32,16 +32,14 @@ jobs:
     # ========== 第二阶段：输入验证 ==========
     - name: 验证输入参数
       run: |
-        # 验证URL格式
         if [[ ! "${{ github.event.inputs.download_url }}" =~ ^https?:// ]]; then
           echo "❌ 错误：非法的URL格式，必须以 http:// 或 https:// 开头"
           exit 1
         fi
 
-        # 标准化云端路径格式
         CLOUD_PATH="${{ github.event.inputs.cloud_path || '/自动备份/'}"
         if [[ ! "$CLOUD_PATH" =~ /$ ]]; then
-          CLOUD_PATH="${CLOUD_PATH}/"  # 确保路径以/结尾
+          CLOUD_PATH="${CLOUD_PATH}/"
         fi
         echo "CLOUD_PATH=${CLOUD_PATH}" >> $GITHUB_ENV
 
@@ -51,12 +49,10 @@ jobs:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
         TIANYI_PASS: ${{ secrets.TIANYI_WEBDAV_PW }}
       run: |
-        # 获取管理员Token
         TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
           -H "Content-Type: application/json" \
           -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
 
-        # 动态创建存储配置
         curl -X POST http://localhost:5244/api/admin/storage/create \
           -H "Authorization: $TOKEN" \
           -H "Content-Type: application/json" \
@@ -71,11 +67,9 @@ jobs:
     # ========== 第四阶段：文件下载 ==========
     - name: 智能下载文件
       run: |
-        # 提取文件名并处理特殊字符
         RAW_URL="${{ github.event.inputs.download_url }}"
         FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')  # 去除URL参数并解码空格
         
-        # 通过Aria2下载
         curl -s http://localhost:6800/jsonrpc \
           -H "Content-Type: application/json" \
           -d '{
@@ -95,7 +89,6 @@ jobs:
             ]
           }'
 
-        # 监控下载进度（最长等待6小时）
         timeout 6h bash -c '
           while true; do
             STATUS=$(curl -s http://localhost:6800/jsonrpc \
@@ -114,12 +107,10 @@ jobs:
         FILENAME=$(basename "${{ github.event.inputs.download_url }}" | sed 's/%20/ /g')
         LOCAL_PATH="/opt/alist/data/downloads/$FILENAME"
 
-        # 获取管理员Token
         TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
           -H "Content-Type: application/json" \
           -d '{"username": "admin", "password": "'"${{ secrets.ALIST_ADMIN_PW }}"'"}' | jq -r .data.token)
 
-        # 分块上传（适合大文件）
         curl -X PUT http://localhost:5244/api/fs/form \
           -H "Authorization: $TOKEN" \
           -F "path=/tianyi-cloud/$FILENAME" \
@@ -131,13 +122,10 @@ jobs:
     - name: 清理和日志
       if: always()
       run: |
-        # 获取容器日志
         docker logs alist-aio > alist.log 2>&1
 
-        # 清理容器
         docker stop alist-aio || true
         docker rm alist-aio || true
 
-        # 上传日志供调试
         echo "========== AList日志 =========="
         cat alist.log
