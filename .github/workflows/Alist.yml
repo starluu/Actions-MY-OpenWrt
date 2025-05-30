@@ -79,6 +79,7 @@ jobs:
         import json
         import urllib.request
         import time
+        import sys
         
         # 配置参数
         ALIST_URL = "http://localhost:5244"
@@ -87,52 +88,69 @@ jobs:
         TIANYI_USER = os.environ['TIANYI_USER']
         TIANYI_PASS = os.environ['TIANYI_PWD']
         
+        def log_error(message):
+            """记录错误信息并退出"""
+            print(f"::error::{message}", file=sys.stderr)
+            sys.exit(1)
+        
+        def api_request(url, method="GET", headers=None, data=None):
+            """发送API请求并返回解析后的JSON响应"""
+            try:
+                req = urllib.request.Request(
+                    url,
+                    data=data,
+                    headers=headers or {},
+                    method=method
+                )
+                
+                with urllib.request.urlopen(req) as response:
+                    response_content = response.read().decode('utf-8')
+                    
+                    # 调试输出
+                    print(f"API响应 ({response.status}): {response_content[:200]}")
+                    
+                    try:
+                        return json.loads(response_content)
+                    except json.JSONDecodeError:
+                        log_error(f"无法解析JSON响应: {response_content[:200]}")
+            
+            except urllib.error.HTTPError as e:
+                response_content = e.read().decode('utf-8')
+                log_error(f"HTTP错误 ({e.code}): {response_content[:200]}")
+            except Exception as e:
+                log_error(f"请求失败: {str(e)}")
+        
         # 1. 获取Token
         login_url = f"{ALIST_URL}/api/auth/login"
         login_data = json.dumps({"username": ALIST_USER, "password": ALIST_PASS}).encode('utf-8')
+        login_headers = {'Content-Type': 'application/json'}
         
-        req = urllib.request.Request(
-            login_url,
-            data=login_data,
-            headers={'Content-Type': 'application/json'},
-            method='POST'
-        )
+        token_response = api_request(login_url, "POST", login_headers, login_data)
         
-        try:
-            with urllib.request.urlopen(req) as response:
-                token_response = json.loads(response.read().decode('utf-8'))
-                if token_response.get('code') != 200:
-                    print(f"::error::登录失败: {token_response.get('message', '未知错误')}")
-                    exit(1)
-                token = token_response['data']['token']
-                print(f"获取到Token: {token}")
-        except Exception as e:
-            print(f"::error::登录请求失败: {str(e)}")
-            exit(1)
+        if token_response.get('code') != 200:
+            log_error(f"登录失败: {token_response.get('message', '未知错误')}")
+        
+        token = token_response['data']['token']
+        print(f"获取到Token: {token}")
         
         # 2. 检查现有存储配置
         list_url = f"{ALIST_URL}/api/admin/storage/list"
-        req = urllib.request.Request(
-            list_url,
-            headers={'Authorization': token},
-            method='GET'
-        )
+        list_headers = {'Authorization': token}
         
-        try:
-            with urllib.request.urlopen(req) as response:
-                storage_list = json.loads(response.read().decode('utf-8'))
-                if storage_list.get('code') != 200:
-                    print(f"::error::获取存储列表失败: {storage_list.get('message', '未知错误')}")
-                    exit(1)
-                
-                # 检查是否已存在天翼云盘存储
-                for storage in storage_list.get('data', []):
-                    if storage.get('mount_path') == '/tianyi':
-                        print("天翼云盘存储已存在，跳过添加")
-                        exit(0)
-        except Exception as e:
-            print(f"::error::获取存储列表失败: {str(e)}")
-            exit(1)
+        storage_list = api_request(list_url, "GET", list_headers)
+        
+        if storage_list.get('code') != 200:
+            log_error(f"获取存储列表失败: {storage_list.get('message', '未知错误')}")
+        
+        # 检查是否已存在天翼云盘存储
+        storages = storage_list.get('data', [])
+        if not isinstance(storages, list):
+            log_error(f"存储列表格式无效: {type(storages)}")
+        
+        for storage in storages:
+            if storage.get('mount_path') == '/tianyi':
+                print("天翼云盘存储已存在，跳过添加")
+                sys.exit(0)
         
         # 3. 添加天翼云盘存储
         storage_data = {
@@ -148,26 +166,18 @@ jobs:
         }
         
         add_url = f"{ALIST_URL}/api/admin/storage"
-        req = urllib.request.Request(
-            add_url,
-            data=json.dumps(storage_data).encode('utf-8'),
-            headers={
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            method='POST'
-        )
+        add_headers = {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+        }
+        add_data = json.dumps(storage_data).encode('utf-8')
         
-        try:
-            with urllib.request.urlopen(req) as response:
-                add_response = json.loads(response.read().decode('utf-8'))
-                if add_response.get('code') != 200:
-                    print(f"::error::添加存储失败: {add_response.get('message', '未知错误')}")
-                    exit(1)
-                print("天翼云盘存储添加成功")
-        except Exception as e:
-            print(f"::error::添加存储请求失败: {str(e)}")
-            exit(1)
+        add_response = api_request(add_url, "POST", add_headers, add_data)
+        
+        if add_response.get('code') != 200:
+            log_error(f"添加存储失败: {add_response.get('message', '未知错误')}")
+        
+        print("天翼云盘存储添加成功")
         EOF
 
     - name: Download file with Aria2
