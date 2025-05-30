@@ -76,7 +76,7 @@ jobs:
         FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')  # 去除URL参数并解码空格
         
         # 通过Aria2下载
-        docker exec -it alist-aio /bin/bash
+        docker exec alist-aio /bin/bash
         wget -P /opt/alist/data/downloads/$FILENAME ${RAW_URL}
         
     # ========== 第五阶段：文件上传 ==========
