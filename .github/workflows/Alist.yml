@@ -76,38 +76,8 @@ jobs:
         FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')  # 去除URL参数并解码空格
         
         # 通过Aria2下载
-        curl -s http://localhost:6800/jsonrpc \
-          -H "Content-Type: application/json" \
-          -d '{
-            "jsonrpc": "2.0",
-            "id": "github-action",
-            "method": "aria2.addUri",
-            "params": [
-              "token:${{ secrets.ARIA2_TOKEN }}",
-              ["'"$RAW_URL"'"],
-              {
-                "dir": "/opt/alist/data/downloads",
-                "out": "'"$FILENAME"'",
-                "split": "10",
-                "max-connection-per-server": "8",
-                "allow-overwrite": "true"
-              }
-            ]
-          }'
-
-        # 监控下载进度（最长等待6小时）
-        timeout 6h bash -c '
-          while true; do
-            STATUS=$(curl -s http://localhost:6800/jsonrpc \
-              -d "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"aria2.tellActive\",\"params\":[\"token:${{ secrets.ARIA2_TOKEN }}\"]}")
-            if [ $(echo "$STATUS" | jq ".result | length") -eq 0 ]; then
-              break
-            fi
-            echo "⌛ 下载进度：$(echo "$STATUS" | jq ".result[0].completedLength")/$(echo "$STATUS" | jq ".result[0].totalLength")"
-            sleep 30
-          done
-        ' || echo "⚠️ 警告：下载任务可能未完成"
-
+        wget -P /opt/alist/data/downloads/$FILENAME ${RAW_URL}
+        
     # ========== 第五阶段：文件上传 ==========
     - name: 安全上传到天翼云
       run: |
