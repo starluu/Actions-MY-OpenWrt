@@ -33,7 +33,6 @@ jobs:
         
     - name: 启动比扬云容器和portainer
       run: |
-        docker run --name=beyondnetwork_edge --privileged --net=host --restart=always --dns=8.8.8.8 --dns=114.114.114.114 -e EDGE_KEY=c1c2bfa4e27a4a80bed596f9b9cab052 -d beyondnetwork-registry.cn-shenzhen.cr.aliyuncs.com/beyondnetwork/edge
         docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
 
     - name: 使用 Ngrok 暴露端口
