@@ -18,7 +18,7 @@ jobs:
     - name: Install dependencies
       run: |
         apk update
-        apk add jq curl
+        apk add jq curl python3
         
     - name: Start Alist service
       run: |
