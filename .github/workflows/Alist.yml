@@ -67,15 +67,12 @@ jobs:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
         TIANYI_PWD: ${{ secrets.TIANYI_PASSWORD }}
       run: |
-        # 安装Python依赖
-        apk add python3 py3-pip
-        pip3 install requests
-        
-        # 使用Python脚本处理API调用
+        # 使用Python标准库处理API调用（无需额外安装）
         python3 <<EOF
         import os
-        import requests
         import json
+        import urllib.request
+        import urllib.parse
         import time
         
         # 配置参数
@@ -87,31 +84,52 @@ jobs:
         
         # 1. 获取Token
         login_url = f"{ALIST_URL}/api/auth/login"
-        login_data = {"username": ALIST_USER, "password": ALIST_PASS}
-        response = requests.post(login_url, json=login_data)
+        login_data = json.dumps({"username": ALIST_USER, "password": ALIST_PASS}).encode('utf-8')
         
-        if response.status_code != 200:
-            print(f"::error::登录失败: {response.status_code} - {response.text}")
+        req = urllib.request.Request(
+            login_url,
+            data=login_data,
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+        )
+        
+        try:
+            with urllib.request.urlopen(req) as response:
+                token_response = json.loads(response.read().decode('utf-8'))
+                if token_response.get('code') != 200:
+                    print(f"::error::登录失败: {token_response.get('message', '未知错误')}")
+                    exit(1)
+                token = token_response['data']['token']
+                print(f"获取到Token: {token}")
+        except Exception as e:
+            print(f"::error::登录请求失败: {str(e)}")
             exit(1)
         
-        token = response.json()['data']['token']
-        print(f"获取到Token: {token}")
-        
-        # 2. 检查现有存储
-        headers = {"Authorization": token}
+        # 2. 检查现有存储配置
         list_url = f"{ALIST_URL}/api/admin/storage/list"
-        response = requests.get(list_url, headers=headers)
+        req = urllib.request.Request(
+            list_url,
+            headers={'Authorization': token},
+            method='GET'
+        )
         
-        if response.status_code != 200:
-            print(f"::error::获取存储列表失败: {response.status_code} - {response.text}")
+        try:
+            with urllib.request.urlopen(req) as response:
+                storage_list = json.loads(response.read().decode('utf-8'))
+                if storage_list.get('code') != 200:
+                    print(f"::error::获取存储列表失败: {storage_list.get('message', '未知错误')}")
+                    exit(1)
+                
+                # 检查是否已存在天翼云盘存储
+                for storage in storage_list.get('data', []):
+                    if storage.get('mount_path') == '/tianyi':
+                        print("天翼云盘存储已存在，跳过添加")
+                        exit(0)
+        except Exception as e:
+            print(f"::error::获取存储列表失败: {str(e)}")
             exit(1)
         
-        storages = response.json().get('data', [])
-        if any(storage['mount_path'] == '/tianyi' for storage in storages):
-            print("天翼云盘存储已存在，跳过添加")
-            exit(0)
-        
-        # 3. 添加存储
+        # 3. 添加天翼云盘存储
         storage_data = {
             "mount_path": "/tianyi",
             "order": 0,
@@ -125,17 +143,26 @@ jobs:
         }
         
         add_url = f"{ALIST_URL}/api/admin/storage"
-        response = requests.post(add_url, headers=headers, json=storage_data)
+        req = urllib.request.Request(
+            add_url,
+            data=json.dumps(storage_data).encode('utf-8'),
+            headers={
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            },
+            method='POST'
+        )
         
-        if response.status_code != 200:
-            print(f"::error::添加存储失败: {response.status_code} - {response.text}")
+        try:
+            with urllib.request.urlopen(req) as response:
+                add_response = json.loads(response.read().decode('utf-8'))
+                if add_response.get('code') != 200:
+                    print(f"::error::添加存储失败: {add_response.get('message', '未知错误')}")
+                    exit(1)
+                print("天翼云盘存储添加成功")
+        except Exception as e:
+            print(f"::error::添加存储请求失败: {str(e)}")
             exit(1)
-        
-        if response.json().get('code') != 200:
-            print(f"::error::添加存储失败: {response.json().get('message', '未知错误')}")
-            exit(1)
-        
-        print("天翼云盘存储添加成功")
         EOF
 
     - name: Download file with Aria2
