@@ -35,7 +35,6 @@ jobs:
         sleep 3
         CPOLAR_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
         echo "ALIST_PUBLIC_URL=$CPOLAR_URL" >> $GITHUB_ENV
-        echo "🌐 Alist 已暴露在公网: $NGROK_URL"
         
     - name: 使用 Ngrok 暴露端口
       run: |
@@ -53,7 +52,6 @@ jobs:
         sleep 3
         NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
         echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
-        echo "🌐 Alist 已暴露在公网: $NGROK_URL"
         
     # ========== 第一阶段：容器初始化 ==========
     - name: 启动Alist-AIO容器
