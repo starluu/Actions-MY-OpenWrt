@@ -26,10 +26,10 @@ jobs:
         unzip cpolar-stable-linux-amd64.zip
         
         # 设置认证令牌（在 https://dashboard.cpolar.com 获取）
-        ./cpolar authtoken MDNlMTdiMzktMDgxNC00MGNhLWJiMzItMzEzYjk0ODBmODc0
+        ./cpolar authtoken ${{ secrets.CPOLAR_TOKEN }} 
         
         # 启动隧道
-        ./cpolar http 5244
+        ./cpolar http 5244 > /dev/null &
         
     - name: 使用 Ngrok 暴露端口
       run: |
