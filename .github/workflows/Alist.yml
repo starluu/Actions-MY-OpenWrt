@@ -85,12 +85,6 @@ jobs:
         FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')
         LOCAL_PATH="/opt/alist/data/downloads/$FILENAME"
 
-        # 检查文件状态
-        if ! docker exec alist-aio test -f "$LOCAL_PATH"; then
-        echo "::error file=$LOCAL_PATH::文件不存在"
-        exit 1
-        fi
-
         # 获取管理员Token
         TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
           -H "Content-Type: application/json" \
