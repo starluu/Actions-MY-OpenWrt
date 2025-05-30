@@ -22,8 +22,8 @@ jobs:
         
     - name: Start Alist service
       run: |
-        # 切换到正确的工作目录
-        cd /opt/alist        
+        # 使用绝对路径启动服务
+        nohup /opt/alist/alist server > /opt/alist/alist.log 2>&1 &       
         
     - name: Start Alist service
       run: |
