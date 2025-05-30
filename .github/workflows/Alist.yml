@@ -82,10 +82,9 @@ jobs:
             "id": "github-action",
             "method": "aria2.addUri",
             "params": [
-              ["'"$RAW_URL"'"],
+              ["RAW_URL CLOUD_PATH"],
               {
                 "dir": "/opt/alist/data/downloads",
-                "out": "RAW_URL CLOUD_PATH",
                 "split": "10",
                 "max-connection-per-server": "8",
                 "allow-overwrite": "true"
