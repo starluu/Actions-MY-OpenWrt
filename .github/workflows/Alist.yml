@@ -8,9 +8,9 @@ on:
         required: true
         default: "https://example.com/demo-file.zip"
       cloud_path:
-        description: "☁️ 天翼云保存路径 (如 /备份/2024/)"
+        description: "☁️ 天翼云保存路径"
         required: false
-        default: "/自动备份/"
+        default: "[/网盘路径](/文件夹路径)"
   schedule:
     - cron: '0 0 * * *'  # 每日UTC 0点自动运行
 
