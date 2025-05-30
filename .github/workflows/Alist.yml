@@ -67,103 +67,49 @@ jobs:
         TIANYI_USER: ${{ secrets.TIANYI_USERNAME }}
         TIANYI_PWD: ${{ secrets.TIANYI_PASSWORD }}
       run: |
-        # 使用Python标准库处理API调用（无需额外安装）
-        python3 <<EOF
-        import os
-        import json
-        import urllib.request
-        import urllib.parse
-        import time
+        # 获取Token
+        token_response=$(curl -s -X POST http://localhost:5244/api/auth/login \
+          -H 'Content-Type: application/json' \
+          -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}")
         
-        # 配置参数
-        ALIST_URL = "http://localhost:5244"
-        ALIST_USER = "admin"
-        ALIST_PASS = os.environ['ALIST_PASSWORD']
-        TIANYI_USER = os.environ['TIANYI_USER']
-        TIANYI_PASS = os.environ['TIANYI_PWD']
+        token=$(echo "$token_response" | jq -r '.data.token')
+        echo "获取到Token: $token"
         
-        # 1. 获取Token
-        login_url = f"{ALIST_URL}/api/auth/login"
-        login_data = json.dumps({"username": ALIST_USER, "password": ALIST_PASS}).encode('utf-8')
+        # 检查现有存储
+        storage_list=$(curl -s -X GET http://localhost:5244/api/admin/storage/list \
+          -H "Authorization: $token")
         
-        req = urllib.request.Request(
-            login_url,
-            data=login_data,
-            headers={'Content-Type': 'application/json'},
-            method='POST'
-        )
+        # 检查是否已存在
+        if echo "$storage_list" | jq -e '.data[] | select(.mount_path == "/tianyi")' >/dev/null; then
+          echo "天翼云盘存储已存在，跳过添加"
+          exit 0
+        fi
         
-        try:
-            with urllib.request.urlopen(req) as response:
-                token_response = json.loads(response.read().decode('utf-8'))
-                if token_response.get('code') != 200:
-                    print(f"::error::登录失败: {token_response.get('message', '未知错误')}")
-                    exit(1)
-                token = token_response['data']['token']
-                print(f"获取到Token: {token}")
-        except Exception as e:
-            print(f"::error::登录请求失败: {str(e)}")
-            exit(1)
+        # 添加存储
+        addition_json="{\"username\":\"$TIANYI_USER\",\"password\":\"$TIANYI_PWD\"}"
+        addition_escaped=$(echo "$addition_json" | jq -aRs . | sed 's/^"//;s/"$//')
         
-        # 2. 检查现有存储配置
-        list_url = f"{ALIST_URL}/api/admin/storage/list"
-        req = urllib.request.Request(
-            list_url,
-            headers={'Authorization': token},
-            method='GET'
-        )
+        response=$(curl -s -X POST http://localhost:5244/api/admin/storage \
+          -H "Authorization: $token" \
+          -H 'Content-Type: application/json' \
+          -d "{
+            \"mount_path\": \"/tianyi\",
+            \"order\": 0,
+            \"driver\": \"Cloud189\",
+            \"cache_expiration\": 30,
+            \"status\": \"work\",
+            \"addition\": \"$addition_escaped\"
+          }")
         
-        try:
-            with urllib.request.urlopen(req) as response:
-                storage_list = json.loads(response.read().decode('utf-8'))
-                if storage_list.get('code') != 200:
-                    print(f"::error::获取存储列表失败: {storage_list.get('message', '未知错误')}")
-                    exit(1)
-                
-                # 检查是否已存在天翼云盘存储
-                for storage in storage_list.get('data', []):
-                    if storage.get('mount_path') == '/tianyi':
-                        print("天翼云盘存储已存在，跳过添加")
-                        exit(0)
-        except Exception as e:
-            print(f"::error::获取存储列表失败: {str(e)}")
-            exit(1)
+        echo "存储添加响应: $response"
         
-        # 3. 添加天翼云盘存储
-        storage_data = {
-            "mount_path": "/tianyi",
-            "order": 0,
-            "driver": "Cloud189",
-            "cache_expiration": 30,
-            "status": "work",
-            "addition": json.dumps({
-                "username": TIANYI_USER,
-                "password": TIANYI_PASS
-            })
-        }
+        # 验证结果
+        if ! echo "$response" | jq -e '.code == 200' >/dev/null; then
+          echo "::error::存储添加失败"
+          exit 1
+        fi
         
-        add_url = f"{ALIST_URL}/api/admin/storage"
-        req = urllib.request.Request(
-            add_url,
-            data=json.dumps(storage_data).encode('utf-8'),
-            headers={
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            method='POST'
-        )
-        
-        try:
-            with urllib.request.urlopen(req) as response:
-                add_response = json.loads(response.read().decode('utf-8'))
-                if add_response.get('code') != 200:
-                    print(f"::error::添加存储失败: {add_response.get('message', '未知错误')}")
-                    exit(1)
-                print("天翼云盘存储添加成功")
-        except Exception as e:
-            print(f"::error::添加存储请求失败: {str(e)}")
-            exit(1)
-        EOF
+        echo "天翼云盘存储添加成功"
 
     - name: Download file with Aria2
       run: |
