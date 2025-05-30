@@ -46,7 +46,6 @@ jobs:
           -e PASSWORD=${{ secrets.ALIST_ADMIN_PW }} \
           -e ARIA2_SECRET=${{ secrets.ARIA2_TOKEN }} \
           xhofe/alist:latest-aio
-          docker exec alist-aio ./alist admin set ${{ secrets.ALIST_ADMIN_PW }}
           echo "⏳ 等待手动配置天翼云存储..."
           echo "👉 请访问 http://localhost:5244 完成配置"
         sleep 1h  # 预留1小时手动操作时间
