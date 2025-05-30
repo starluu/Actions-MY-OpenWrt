@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # ========== 初始阶段：内网穿透 ==========
-    - name: 使用 cpolar 暴露端口Add commentMore actions
+    - name: 使用 cpolar 暴露端口
       run: |
         # 下载 cpolar
         wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
@@ -48,7 +48,7 @@ jobs:
         ./ngrok http 5244 > /dev/null &
     
         # 获取公共 URL
-        sleep 6
+        sleep 3
         NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
         echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
         echo "🌐 Alist 已暴露在公网: $NGROK_URL"
