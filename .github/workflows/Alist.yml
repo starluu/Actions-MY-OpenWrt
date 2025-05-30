@@ -46,8 +46,8 @@ jobs:
           xhofe/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
           echo "⏳ 等待手动配置天翼云存储..."
-          echo "👉 请访问 http://localhost:5244 完成配置"
-        sleep 3m  # 预留3分钟手动操作时间
+          echo "👉 预留6分钟手动操作时间"
+        sleep 6m  # 预留6分钟手动操作时间
 
     - name: 验证存储配置
       run: |
@@ -83,7 +83,6 @@ jobs:
       run: |
         # 提取文件名并处理特殊字符
         RAW_URL="${{ github.event.inputs.download_url }}"
-        FILENAME=$(basename "${RAW_URL%%\?*}" | sed 's/%20/ /g')  # 去除URL参数并解码空格
         
         # 通过Aria2下载
         curl -s http://localhost:6800/jsonrpc \
@@ -96,7 +95,7 @@ jobs:
               ["'"$RAW_URL"'"],
               {
                 "dir": "/opt/alist/data/downloads",
-                "out": "'"$FILENAME"'",
+                "out": "'"RAW_URL"'",
                 "split": "10",
                 "max-connection-per-server": "8",
                 "allow-overwrite": "true"
@@ -116,25 +115,6 @@ jobs:
             sleep 30
           done
         ' || echo "⚠️ 警告：下载任务可能未完成"
-
-    # ========== 第五阶段：文件上传 ==========
-    - name: 安全上传到天翼云
-      run: |
-        FILENAME=$(basename "${{ github.event.inputs.download_url }}" | sed 's/%20/ /g')
-        LOCAL_PATH="/opt/alist/data/downloads/$FILENAME"
-
-        # 获取管理员Token
-        TOKEN=$(curl -s -X POST http://localhost:5244/api/auth/login \
-          -H "Content-Type: application/json" \
-          -d '{"username": "admin", "password": "'"admin"'"}' | jq -r .data.token)
-
-        # 分块上传（适合大文件）
-        curl -X PUT http://localhost:5244/api/fs/form \
-          -H "Authorization: $TOKEN" \
-          -F "path=/tianyi-cloud/$FILENAME" \
-          -F "file=@$LOCAL_PATH" \
-          -F "chunk_index=0" \
-          -F "chunk_count=1"
 
     # ========== 第六阶段：收尾工作 ==========
     - name: 清理和日志
