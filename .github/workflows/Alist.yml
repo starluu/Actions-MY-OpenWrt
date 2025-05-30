@@ -108,7 +108,7 @@ jobs:
         timeout 6h bash -c '
           while true; do
             STATUS=$(curl -s http://localhost:6800/jsonrpc \
-              -d "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"aria2.tellActive\",\"params\":[\"token:${{ secrets.ARIA2_TOKEN }}\"]}")
+              -d "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"aria2.tellActive\",\"params\"\"]}")
             if [ $(echo "$STATUS" | jq ".result | length") -eq 0 ]; then
               break
             fi
