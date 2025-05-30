@@ -43,7 +43,7 @@ jobs:
         docker run -d --name alist-aio \
           -p 5244:5244 \
           -p 6800:6800 \
-          xhofe/alist:latest-aio
+          ykxvk8yl5l/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
           echo "⏳ 等待手动配置天翼云存储..."
           echo "👉 预留16分钟手动操作时间"
