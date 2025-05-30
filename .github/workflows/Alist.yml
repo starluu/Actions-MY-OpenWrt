@@ -73,62 +73,87 @@ jobs:
           -H 'Content-Type: application/json' \
           -d "{\"username\":\"admin\",\"password\":\"$ALIST_PASSWORD\"}")
         
+        echo "登录响应: $token_response"
+        
         if ! echo "$token_response" | jq -e '.code == 200' >/dev/null; then
           echo "::error::获取Token失败"
-          echo "响应: $token_response"
           exit 1
         fi
         
         token=$(echo "$token_response" | jq -r '.data.token')
         echo "获取到有效Token: $token"
         
-        # 2. 检查当前存储配置
+        # 2. 检查当前存储配置 - 使用更可靠的查询
         echo "检查现有存储配置..."
         storage_list=$(curl -s -X GET http://localhost:5244/api/admin/storage/list \
           -H "Authorization: $token")
         
-        # 如果天翼云盘已配置，则跳过添加
-        if echo "$storage_list" | jq -e '.data[] | select(.mount_path == "/tianyi")' >/dev/null; then
+        echo "存储列表响应: $storage_list"
+        
+        # 调整查询方式以适应API响应结构
+        if echo "$storage_list" | jq -e '.data | any(.mount_path == "/tianyi")' >/dev/null; then
           echo "天翼云盘存储已存在，跳过添加"
           exit 0
         fi
         
-        # 3. 添加天翼云盘存储
+        # 3. 确保Cloud189驱动可用
+        echo "检查Cloud189驱动是否可用..."
+        drivers=$(curl -s -X GET http://localhost:5244/api/admin/driver/list \
+          -H "Authorization: $token")
+        
+        if ! echo "$drivers" | jq -e '.drivers | any(.name == "Cloud189")' >/dev/null; then
+          echo "::error::Cloud189驱动不可用"
+          echo "可用驱动:"
+          echo "$drivers" | jq '.drivers[].name'
+          exit 1
+        fi
+        
+        # 4. 使用更可靠的JSON构建方法
         echo "添加天翼云盘存储..."
         addition_json="{\"username\":\"$TIANYI_USER\",\"password\":\"$TIANYI_PWD\"}"
-        addition_escaped=$(echo "$addition_json" | jq -aRs . | sed 's/^"//;s/"$//')
         
-        storage_payload=$(cat <<EOF
-        {
-          "mount_path": "/tianyi",
-          "order": 0,
-          "driver": "Cloud189",
-          "cache_expiration": 30,
-          "status": "work",
-          "addition": "$addition_escaped"
-        }
-        EOF
-        )
+        # 使用jq构建完整的payload
+        storage_payload=$(jq -n \
+          --arg mount_path "/tianyi" \
+          --arg driver "Cloud189" \
+          --argjson cache_expiration 30 \
+          --arg status "work" \
+          --arg addition "$addition_json" \
+          '{
+            mount_path: $mount_path,
+            order: 0,
+            driver: $driver,
+            cache_expiration: $cache_expiration,
+            status: $status,
+            addition: $addition
+          }')
         
-        response=$(curl -s -X POST http://localhost:5244/api/admin/storage \
+        echo "存储负载: $storage_payload"
+        
+        # 5. 添加存储并检查响应
+        response=$(curl -i -s -X POST http://localhost:5244/api/admin/storage \
           -H "Authorization: $token" \
           -H 'Content-Type: application/json' \
           -d "$storage_payload")
         
-        echo "存储添加响应: $response"
+        # 分离响应头和响应体
+        response_header=$(echo "$response" | awk 'NR>1 && /^\r?$/{exit} {print}')
+        response_body=$(echo "$response" | awk 'BEGIN{p=0} /^\r?$/{p=1} p')
         
-        # 4. 验证添加结果
-        if ! echo "$response" | jq -e '.code == 200' >/dev/null; then
+        echo "存储添加响应头: $response_header"
+        echo "存储添加响应体: $response_body"
+        
+        # 6. 验证添加结果
+        if ! echo "$response_body" | jq -e '.code == 200' >/dev/null; then
           echo "::error::存储添加失败"
           
           # 尝试获取更详细的错误信息
-          error_msg=$(echo "$response" | jq -r '.message // "未知错误"')
+          error_msg=$(echo "$response_body" | jq -r '.message // "未知错误"')
           echo "错误信息: $error_msg"
           
-          # 检查驱动是否可用
-          drivers=$(curl -s -X GET http://localhost:5244/api/admin/driver/list \
-            -H "Authorization: $token")
-          echo "可用驱动: $drivers"
+          # 检查Alist日志获取更多信息
+          echo "Alist日志最后20行:"
+          tail -20 alist.log
           
           exit 1
         fi
