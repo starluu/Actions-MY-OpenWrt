@@ -93,7 +93,6 @@ jobs:
             "id": "github-action",
             "method": "aria2.addUri",
             "params": [
-              "token:${{ secrets.ARIA2_TOKEN }}",
               ["'"$RAW_URL"'"],
               {
                 "dir": "/opt/alist/data/downloads",
