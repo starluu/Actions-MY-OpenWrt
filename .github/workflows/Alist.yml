@@ -22,6 +22,11 @@ jobs:
         
     - name: Start Alist service
       run: |
+        # 切换到正确的工作目录
+        cd /opt/alist        
+        
+    - name: Start Alist service
+      run: |
         # 启动Alist服务并确保在后台运行
         nohup ./alist server > alist.log 2>&1 &
         
@@ -40,6 +45,7 @@ jobs:
     - name: Get admin password
       id: get_password
       run: |
+        cd /opt/alist
         # 从日志中提取初始密码
         password=$(grep "password" alist.log | awk '{print $NF}' | tail -1)
         
