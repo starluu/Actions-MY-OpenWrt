@@ -15,6 +15,12 @@ jobs:
       options: --dns=8.8.8.8 -v /tmp/data:/opt/alist/data
 
     steps:
+    - name: Install dependencies
+      run: |
+        # 安装必要的工具
+        apk update
+        apk add jq curl
+        
     - name: Start Alist service
       run: |
         # 启动Alist服务
