@@ -18,6 +18,25 @@ jobs:
   alist-automation:
     runs-on: ubuntu-latest
     steps:
+    # ========== 初始阶段：内网穿透 ==========
+    - name: 使用 Ngrok 暴露端口
+      run: |
+        # 下载 ngrok
+        wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+        tar xvzf ngrok-v3-stable-linux-amd64.tgz
+        
+        # 设置认证令牌（在 https://dashboard.ngrok.com 获取）
+        ./ngrok authtoken ${{ secrets.NGROK_TOKEN }}
+        
+        # 启动隧道
+        ./ngrok http 5244 > /dev/null &
+        
+        # 获取公共 URL
+        sleep 5
+        NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+        echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
+        echo "🌐 Alist 已暴露在公网: $NGROK_URL"
+        
     # ========== 第一阶段：容器初始化 ==========
     - name: 启动Alist-AIO容器
       run: |
@@ -27,8 +46,10 @@ jobs:
           -e PASSWORD=${{ secrets.ALIST_ADMIN_PW }} \
           -e ARIA2_SECRET=${{ secrets.ARIA2_TOKEN }} \
           xhofe/alist:latest-aio
-        sleep 20  # 等待服务启动
-
+          echo "⏳ 等待手动配置天翼云存储..."
+          echo "👉 请访问 http://localhost:5244 完成配置"
+        sleep 1h  # 预留1小时手动操作时间
+        
     # ========== 第二阶段：输入验证 ==========
     - name: 验证输入参数
       run: |
