@@ -63,6 +63,7 @@ jobs:
             -p 6800:6800 \
             -v /etc/alist:/opt/alist/data  \
             -v /mnt:/mnt  \
+            --restart=always \
             xhofe/alist:latest-aio
             echo "⏳ 等待手动配置天翼云存储..."
             echo "👉 预留6小时手动操作时间"
