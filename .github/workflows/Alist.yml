@@ -2,17 +2,6 @@ name: Alist-AIO 自动化传输
 
 on:
   workflow_dispatch:
-    inputs:
-      download_url:
-        description: "🔗 要下载的文件URL (必须 http/https 开头)"
-        required: true
-        default: "https://example.com/demo-file.zip"
-      cloud_path:
-        description: "☁️ 天翼云保存路径"
-        required: false
-        default: "[/ty](/离线下载)"
-  schedule:
-    - cron: '0 0 * * *'  # 每日UTC 0点自动运行
 
 jobs:
   alist-automation:
