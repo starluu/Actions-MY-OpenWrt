@@ -52,6 +52,7 @@ jobs:
             -p 8080:8080 \
             -v /etc/appdata/config:/config \
             -v /mnt/downloads:/downloads \
+            --network host \
             --restart=always \
             superng6/qbittorrentee
     
