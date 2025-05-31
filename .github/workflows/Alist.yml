@@ -20,6 +20,8 @@ jobs:
         
         # 启动隧道
         ./cpolar http 9000 > /dev/null &
+        ./cpolar http 6880 > /dev/null &
+        ./cpolar http 6881 > /dev/null &
         
     - name: 使用 Ngrok 穿透
       run: |
