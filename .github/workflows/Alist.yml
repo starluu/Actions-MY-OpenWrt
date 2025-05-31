@@ -64,8 +64,8 @@ jobs:
             -v /etc/alist:/opt/alist/data  \
             -v /mnt:/mnt  \
             xhofe/alist:latest-aio
-            docker exec alist-aio ./alist admin set admin
-            export NGROK_URL="$(curl http://localhost:4040/api/tunnels | jq ".tunnels[0].public_url")"
+            local json_data=$(curl -s localhost:4040/api/tunnels)
+            local NGROK_URL=$(echo "$json_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['tunnels'][0]['public_url'])")
             echo $NGROK_URL
             echo "🌐 Alist 已暴露在公网: $NGROK_URL"          
             echo "⏳ 等待手动配置天翼云存储..."
