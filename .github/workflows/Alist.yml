@@ -60,8 +60,8 @@ jobs:
         docker run -d --name alist-aio \
             -p 5244:5244 \
             -p 6800:6800 \
-            -v /etc/appdata/config:/config  \
-            -v /mnt/downloads:/downloads  \
+            -v /etc/alist:/opt/alist/data  \
+            -v /mnt:/mnt  \
             xhofe/alist:latest-aio
             docker exec alist-aio ./alist admin set admin
             export NGROK_URL="$(curl http://localhost:4040/api/tunnels | jq ".tunnels[0].public_url")"
