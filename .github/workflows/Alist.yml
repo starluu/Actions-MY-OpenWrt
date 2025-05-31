@@ -20,8 +20,7 @@ jobs:
         
         # 启动隧道
         ./cpolar http 9000 > /dev/null &
-        ./cpolar http 6880 > /dev/null &
-        ./cpolar http 6881 > /dev/null &
+        ./cpolar http 8080 > /dev/null &
         
     - name: 使用 Ngrok 穿透
       run: |
@@ -39,10 +38,6 @@ jobs:
     - name: 启动 portainer 容器
       run: |
         docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
-        
-    - name: 启动 ariang 容器
-      run: |        
-        docker run -d --name ariang --restart=always -p 6880:6880 p3terx/ariang
         
     - name: 启动 qbittorrent 容器
       run: |        
