@@ -61,7 +61,7 @@ jobs:
             -p 5244:5244 \
             -p 6800:6800 \
             -v /etc/alist:/opt/alist/data \
-            -v /mnt/qbittorrentee/data/downloads:/mnt \
+            -v /mnt/qbittorrentee/downloads:/mnt \
             --restart=always \
             xhofe/alist:latest-aio
             echo "⏳ 等待手动配置天翼云存储..."
