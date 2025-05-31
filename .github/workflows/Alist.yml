@@ -50,8 +50,8 @@ jobs:
             -p 6881:6881  \
             -p 6881:6881/udp  \
             -p 8080:8080  \
-            -v /path/to/appdata/config:/config  \
-            -v /path/to/downloads:/downloads  \
+            -v /etc/appdata/config:/config  \
+            -v /mnt/downloads:/downloads  \
             --restart=always  \
             superng6/qbittorrentee
     
