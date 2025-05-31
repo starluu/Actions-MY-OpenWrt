@@ -42,6 +42,6 @@ jobs:
     - name: 启动 Alist-AIO 容器
       run: |
         sudo docker run --rm -it --shm-size=512m -p 6901:6901 kasmweb/chrome:1.17.0-rolling-daily
-            echo "⏳ 等待手动配置天翼云存储..."
+            echo "⏳ 等待手动配置测试项目"
             echo "👉 预留6小时手动操作时间"
          sleep 6h
