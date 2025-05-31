@@ -39,9 +39,9 @@ jobs:
       run: |
         docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
     
-    - name: 启动 Alist-AIO 容器
+    - name: 启动 test 容器
       run: |
-        sudo docker run --rm -it --shm-size=512m -p 6901:6901 kasmweb/chrome:1.17.0-rolling-daily
+        sudo docker run --rm --shm-size=512m -p 6901:6901 kasmweb/chrome:1.17.0-rolling-daily
             echo "⏳ 等待手动配置测试项目"
             echo "👉 预留6小时手动操作时间"
          sleep 6h
