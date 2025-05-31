@@ -43,10 +43,6 @@ jobs:
       run: |
         docker run -d \
            --name windows \
-           --device=/dev/kvm \
-           --device=/dev/net/tun \
-           --cap-add NET_ADMIN \
-           -v "${PWD:-.}/windows:/storage"
            -p 8006:8006 \
            -p 3389:3389/tcp \
            -p 3389:3389/udp \
