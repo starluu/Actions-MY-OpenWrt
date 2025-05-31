@@ -58,12 +58,15 @@ jobs:
     - name: 启动 Alist-AIO 容器
       run: |
         docker run -d --name alist-aio \
-          -p 5244:5244 \
-          -p 6800:6800 \
-          xhofe/alist:latest-aio
-          docker exec alist-aio ./alist admin set admin
-          NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
-          echo "🌐 Alist 已暴露在公网: $NGROK_URL"          
-          echo "⏳ 等待手动配置天翼云存储..."
-          echo "👉 预留6小时手动操作时间"
-        sleep 6h
+            -p 5244:5244 \
+            -p 6800:6800 \
+            -v /etc/appdata/config:/config  \
+            -v /mnt/downloads:/downloads  \
+            xhofe/alist:latest-aio
+            docker exec alist-aio ./alist admin set admin
+            export NGROK_URL="$(curl http://localhost:4040/api/tunnels | jq ".tunnels[0].public_url")"
+            echo $NGROK_URL
+            echo "🌐 Alist 已暴露在公网: $NGROK_URL"          
+            echo "⏳ 等待手动配置天翼云存储..."
+            echo "👉 预留6小时手动操作时间"
+         sleep 6h
