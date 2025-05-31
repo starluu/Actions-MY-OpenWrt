@@ -41,7 +41,7 @@ jobs:
         
     - name: 启动 qbittorrent 容器
       run: |        
-        docker create \
+        docker run -d \
             --name=qbittorrentee \
             -e WEBUIPORT=8080 \
             -e PASSWORD=admin \
