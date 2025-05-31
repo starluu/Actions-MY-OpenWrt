@@ -44,6 +44,7 @@ jobs:
         docker create  \
             --name=qbittorrentee  \
             -e WEBUIPORT=8080  \
+            -e PASSWORD=admin
             -e PUID=1026 \
             -e PGID=100 \
             -e TZ=Asia/Shanghai \
