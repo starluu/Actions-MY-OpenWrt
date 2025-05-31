@@ -58,13 +58,13 @@ jobs:
     
     - name: 启动 Alist-AIO 容器
       run: |
-        docker run -d --name alist-aio \
+        docker run -d --name alist \
             -p 5244:5244 \
             -p 6800:6800 \
             -v /etc/alist:/opt/alist/data  \
             -v /mnt:/mnt  \
             xhofe/alist:latest-aio
-            docker exec -i alist ./alist admin set admin
+            docker exec -i alist ./alist admin random
             echo "⏳ 等待手动配置天翼云存储..."
             echo "👉 预留6小时手动操作时间"
          sleep 6h
