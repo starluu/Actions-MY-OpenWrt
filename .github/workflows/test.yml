@@ -19,8 +19,8 @@ jobs:
         ./cpolar authtoken ${{ secrets.CPOLAR_TOKEN }} 
         
         # 启动隧道
-        ./cpolar http 6901 > /dev/null &
-        ./cpolar http 9200 > /dev/null &
+        ./cpolar http 8006 > /dev/null &
+        ./cpolar http 3389 > /dev/null &
         
     - name: 使用 Ngrok 穿透
       run: |
@@ -42,15 +42,20 @@ jobs:
     - name: 启动 test 容器
       run: |
         docker run -d \
-            --name chrome \
-            --shm-size=1024m \
-            -p 6901:6901 \
-            -e VNC_PW=password \
-            -e LANG=zh_CN.UTF-8 \
-            -e TZ=Asia/Shanghai \
-            -u root \
+            --name windows \
+            --device=/dev/kvm \
+            --device=/dev/net/tun \
+            --cap-add NET_ADMIN \
+            -v "${PWD:-.}/windows:/storage"
+            -p 8006:8006 \
+            -p 3389:3389/tcp \
+            -p 3389:3389/udp \
+            -e VERSION=11l \
+            -e RAM_SIZE="8G" \
+            -e CPU_CORES="4" \
+            -e LANGUAGE=Chinese \
             --restart always \
-            kasmweb/chrome:1.17.0-rolling-daily
+            dockurr/windows
             echo "⏳ 等待手动配置测试项目"
             echo "👉 预留6小时手动操作时间"
          sleep 6h
