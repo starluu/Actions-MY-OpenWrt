@@ -50,8 +50,7 @@ jobs:
             -p 34567:34567 \
             -p 34567:34567/udp \
             -p 8080:8080 \
-            -v /etc/appdata/config:/data/config \
-            -v /mnt/downloads:/data/downloads \
+            -v /mnt/qbittorrentee/data:/data \
             --restart=always \
             ddsderek/qbittorrentee:latest-iyuu
     
@@ -61,7 +60,7 @@ jobs:
             -p 5244:5244 \
             -p 6800:6800 \
             -v /etc/alist:/opt/alist/data  \
-            -v /mnt/downloads:/mnt  \
+            -v /mnt/qbittorrentee/data/downloads:/mnt  \
             --restart=always \
             xhofe/alist:latest-aio
             echo "⏳ 等待手动配置天翼云存储..."
