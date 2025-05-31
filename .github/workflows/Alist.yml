@@ -38,11 +38,12 @@ jobs:
     # ========== 部署阶段：容器初始化 ==========
     - name: 启动 portainer 容器
       run: |
-        docker run -d --restart=always --name="portainer" -p 9000:9000 6053537/portainer-ce
+        docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
+
         
     - name: 启动 ariang 容器
       run: |        
-        docker run --restart=always -p 6880:6880 --name ariang -d p3terx/ariang
+        docker run -d --name ariang --restart=always -p 6880:6880 p3terx/ariang
         
     - name: 启动 qbittorrent 容器
       run: |        
@@ -55,6 +56,8 @@ jobs:
             -p 6881:6881  \
             -p 6881:6881/udp  \
             -p 8080:8080  \
+            -v /path/to/appdata/config:/config  \
+            -v /path/to/downloads:/downloads  \
             --restart=always  \
             superng6/qbittorrentee
     
