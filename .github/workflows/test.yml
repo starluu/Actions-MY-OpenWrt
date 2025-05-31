@@ -41,7 +41,16 @@ jobs:
     
     - name: 启动 test 容器
       run: |
-        sudo docker run --rm --shm-size=512m -p 6901:6901 kasmweb/chrome:1.17.0-rolling-daily
+        docker run -d \
+            --name chrome \
+            --shm-size=1024m \
+            -p 6901:6901 \
+            -e VNC_PW=password \
+            -e LANG=zh_CN.UTF-8 \
+            -e TZ=Asia/Shanghai \
+            -u root \
+            --restart always \
+            kasmweb/chrome:1.17.0-rolling-daily
             echo "⏳ 等待手动配置测试项目"
             echo "👉 预留6小时手动操作时间"
          sleep 6h
