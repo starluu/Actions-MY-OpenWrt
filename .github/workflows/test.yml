@@ -42,20 +42,20 @@ jobs:
     - name: 启动 test 容器
       run: |
         docker run -d \
-            --name windows \
-            --device=/dev/kvm \
-            --device=/dev/net/tun \
-            --cap-add NET_ADMIN \
-            -v "${PWD:-.}/windows:/storage"
-            -p 8006:8006 \
-            -p 3389:3389/tcp \
-            -p 3389:3389/udp \
-            -e VERSION=11l \
-            -e RAM_SIZE="8G" \
-            -e CPU_CORES="4" \
-            -e LANGUAGE=Chinese \
-            --restart always \
-            dockurr/windows
-            echo "⏳ 等待手动配置测试项目"
-            echo "👉 预留6小时手动操作时间"
-         sleep 6h
+           --name windows \
+           --device=/dev/kvm \
+           --device=/dev/net/tun \
+           --cap-add NET_ADMIN \
+           -v "${PWD:-.}/windows:/storage"
+           -p 8006:8006 \
+           -p 3389:3389/tcp \
+           -p 3389:3389/udp \
+           -e VERSION=11l \
+           -e RAM_SIZE="8G" \
+           -e CPU_CORES="4" \
+           -e LANGUAGE=Chinese \
+           --restart always \
+           dockurr/windows
+           echo "⏳ 等待手动配置测试项目"
+           echo "👉 预留6小时手动操作时间"
+        sleep 6h
