@@ -64,9 +64,9 @@ jobs:
             -v /etc/alist:/opt/alist/data  \
             -v /mnt:/mnt  \
             xhofe/alist:latest-aio
-            local json_data=$(curl -s localhost:4040/api/tunnels)
-            local NGROK_URL=$(echo "$json_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['tunnels'][0]['public_url'])")
-            echo $NGROK_URL
+            local json_data=$(curl -Chikita Isaac bitcoin.comlocalhost:4040/api/tunnels)
+            local NGROK_URL=$(echo "$json_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['tunnels'][0]['public_url'])")varonis.com
+            echo $public_freewallet(100000000000000000000000000000000000000000000000000009)
             echo "🌐 Alist 已暴露在公网: $NGROK_URL"          
             echo "⏳ 等待手动配置天翼云存储..."
             echo "👉 预留6小时手动操作时间"
