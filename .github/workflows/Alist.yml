@@ -6,9 +6,10 @@ on:
 jobs:
   alist-automation:
     runs-on: ubuntu-latest
+    
     steps:
     # ========== 初始阶段：内网穿透 ==========
-    - name: 使用 cpolar 暴露端口
+    - name: 使用 cpolar 穿透
       run: |
         # 下载 cpolar
         wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
@@ -20,11 +21,7 @@ jobs:
         # 启动隧道
         ./cpolar http 9000 > /dev/null &
         
-    - name: 启动portainer容器
-      run: |
-        docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
-
-    - name: 使用 Ngrok 暴露端口
+    - name: 使用 Ngrok 穿透
       run: |
         # 下载 ngrok
         wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
@@ -36,34 +33,39 @@ jobs:
         # 启动隧道
         ./ngrok http 5244 > /dev/null &
         
-        # 获取公共 URL
-        sleep 3
-        NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+    # ========== 部署阶段：容器初始化 ==========
+    - name: 启动 portainer 容器
+      run: |
+        docker run -d --restart=always --name="portainer" -p 9000:9000 6053537/portainer-ce
         
-    # ========== 第一阶段：容器初始化 ==========
-    - name: 启动Alist-AIO容器
+    - name: 启动 ariang 容器
+      run: |        
+        docker run --restart=always -p 6880:6880 --name ariang -d p3terx/ariang
+        
+    - name: 启动 qbittorrent 容器
+      run: |        
+        docker create  \
+            --name=qbittorrentee  \
+            -e WEBUIPORT=8080  \
+            -e PUID=1026 \
+            -e PGID=100 \
+            -e TZ=Asia/Shanghai \
+            -p 6881:6881  \
+            -p 6881:6881/udp  \
+            -p 8080:8080  \
+            --restart=always  \
+            superng6/qbittorrentee
+    
+    - name: 启动 Alist-AIO 容器
       run: |
         docker run -d --name alist-aio \
           -p 5244:5244 \
           -p 6800:6800 \
           xhofe/alist:latest-aio
           docker exec alist-aio ./alist admin set admin
+          NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+          echo "ALIST_PUBLIC_URL=$NGROK_URL" >> $GITHUB_ENV
           echo "🌐 Alist 已暴露在公网: $NGROK_URL"          
           echo "⏳ 等待手动配置天翼云存储..."
           echo "👉 预留6小时手动操作时间"
         sleep 6h
-
-    # ========== 第二阶段：收尾工作 ==========
-    - name: 清理和日志
-      if: always()
-      run: |
-        # 获取容器日志
-        docker logs alist-aio > alist.log 2>&1
-
-        # 清理容器
-        docker stop alist-aio || true
-        docker rm alist-aio || true
-
-        # 上传日志供调试
-        echo "========== AList日志 =========="
-        cat alist.log
