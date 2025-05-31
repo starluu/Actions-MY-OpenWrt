@@ -37,7 +37,7 @@ jobs:
     # ========== 部署阶段：容器初始化 ==========
     - name: 启动 portainer 容器
       run: |
-        docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
+        docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock outlovecn/portainer-cn
         
     - name: 启动 qbittorrent 容器
       run: |        
