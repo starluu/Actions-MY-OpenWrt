@@ -43,24 +43,25 @@ jobs:
         docker run -d \
             --name=qbittorrentee \
             -e WEBUI_PORT=8080 \
-            -e BT_PORT=34567 \
-            -e PUID=1026 \
-            -e PGID=100 \
+            -e TORRENTING_PORT=6881 \
+            -e PUID=1000 \
+            -e PGID=1000 \
             -e TZ=Asia/Shanghai \
-            -p 34567:34567 \
-            -p 34567:34567/udp \
+            -p 6881:6881 \
+            -p 6881:6881/udp \
             -p 8080:8080 \
-            -v /mnt/qbittorrentee/data:/data \
+            -v /mnt/qbittorrentee/appdata:/config \
+             -v /mnt/qbittorrentee/downloads:/downloads \
             --restart=always \
-            ddsderek/qbittorrentee:latest-iyuu
+            rogunt/qbittorrentee
     
     - name: 启动 Alist-AIO 容器
       run: |
         docker run -d --name alist \
             -p 5244:5244 \
             -p 6800:6800 \
-            -v /etc/alist:/opt/alist/data  \
-            -v /mnt/qbittorrentee/data/downloads:/mnt  \
+            -v /etc/alist:/opt/alist/data \
+            -v /mnt/qbittorrentee/data/downloads:/mnt \
             --restart=always \
             xhofe/alist:latest-aio
             echo "⏳ 等待手动配置天翼云存储..."
