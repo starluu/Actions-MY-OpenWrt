@@ -20,7 +20,7 @@ jobs:
         
         # 启动隧道
         ./cpolar http 5244 > /dev/null &
-        ./cpolar http 8080 > /dev/null &
+        ./cpolar http 9000 > /dev/null &
         
     - name: 使用 Ngrok 穿透
       run: |
@@ -32,7 +32,7 @@ jobs:
         ./ngrok authtoken ${{ secrets.NGROK_TOKEN }}
         
         # 启动隧道
-        ./ngrok http 9000 > /dev/null &
+        ./ngrok http 8080 > /dev/null &
         
     # ========== 部署阶段：容器初始化 ==========
     - name: 启动 portainer 容器
