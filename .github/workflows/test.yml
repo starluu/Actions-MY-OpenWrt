@@ -21,6 +21,7 @@ jobs:
     - name: 使用 cpolar 穿透
       run: |
         docker run -id --network host --name cpolar probezy/cpolar
+        docker exec -i cpolar /bin/bash
         
     - name: 使用 Ngrok 穿透
       run: |
