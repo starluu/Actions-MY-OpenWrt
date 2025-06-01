@@ -73,6 +73,6 @@ jobs:
             --network host \
             --restart=always \
             xhofe/alist:latest-aio
-            echo "⏳ 等待手动配置天翼云存储..."
+            echo "⏳ 等待手动配置Alist云存储"
             echo "👉 预留6小时手动操作时间"
          sleep 6h
