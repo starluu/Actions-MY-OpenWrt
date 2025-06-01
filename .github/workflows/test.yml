@@ -28,10 +28,7 @@ jobs:
         ./cpolar authtoken ${{ secrets.CPOLAR_TOKEN }} 
         
         # 启动隧道
-        ./cpolar http 5244 > /dev/null &
         ./cpolar http 9000 > /dev/null &
-        ./cpolar http 9200 > /dev/null &
-        ./cpolar http 3389 > /dev/null &
         ./cpolar http 33272 > /dev/null &
 
     - name: 使用 Ngrok 穿透
