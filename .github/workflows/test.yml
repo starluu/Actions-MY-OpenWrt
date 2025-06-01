@@ -21,14 +21,14 @@ jobs:
     - name: 使用 cpolar 穿透
       run: |
         docker run -itd \
-	     --name=cpolar \
-	     --net=host \
-	     --restart=always \
-	     -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
-	     kikitech/cpolar:latest \
-	     http 8080  \
-             http 9200  \
-             http 9000  
+	    --name=cpolar \
+	    --net=host \
+	    --restart=always \
+	    -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
+	    kikitech/cpolar:latest \
+	    http 8080  \
+            http 9200  \
+            http 9000  
         
     - name: 使用 Ngrok 穿透
       run: |
