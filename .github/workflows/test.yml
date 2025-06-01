@@ -26,8 +26,8 @@ jobs:
             --restart=always \
             -e AUTH_TOKEN=XXXX \
             kikitech/cpolar:latest \
+            http 80 \
             http 80
-     
         
     - name: 使用 Ngrok 穿透
       run: |
