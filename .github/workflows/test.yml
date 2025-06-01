@@ -22,7 +22,7 @@ jobs:
       run: |
         docker run -id --network host --name cpolar probezy/cpolar
         docker exec -i cpolar /bin/bash
-        cpolar authtoken ${{ secrets.CPOLAR_TOKEN }}
+        ./cpolar authtoken ${{ secrets.CPOLAR_TOKEN }}
 
     - name: 使用 Ngrok 穿透
       run: |
