@@ -27,8 +27,6 @@ jobs:
             --restart=always \
             -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
             kikitech/cpolar \
-            http 8080 \
-            http 9000 \
             http 9200
         
     - name: 使用 Ngrok 穿透
