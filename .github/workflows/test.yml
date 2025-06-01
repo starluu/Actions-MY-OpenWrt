@@ -24,12 +24,12 @@ jobs:
         
     - name: 使用 Ngrok 穿透
       run: |
-        docker run -d --name=ngrok --privileged --net=host --restart=always -e NGROK_AUTHTOKEN=${{ secrets.NGROK_TOKEN }} ngrok/ngrok:alpine http 8006
+        docker run -d --name=ngrok --privileged --net=host --restart=always -e NGROK_AUTHTOKEN=${{ secrets.NGROK_TOKEN }} ngrok/ngrok:alpine http 9000
 
     # ========== 部署阶段：容器初始化 ==========
     - name: 启动 portainer 容器
       run: |
-        docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
+        docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce:2.24.1-alpine
            echo "⏳ 等待手动配置测试项目"
            echo "👉 预留6小时手动操作时间"
         sleep 6h
