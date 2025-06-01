@@ -9,6 +9,15 @@ jobs:
     
     steps:
     # ========== 初始阶段：内网穿透 ==========
+        - name: 使用 皎月连 穿透
+      run: |
+        docker run -d --name natpierce \
+            --restart=always \
+            --privileged \
+            --net=host \
+            -v natpierce_data:/natpierce \
+            xiyu505/natpierce:latest  
+            
     - name: 使用 cpolar 穿透
       run: |
         # 下载 cpolar
