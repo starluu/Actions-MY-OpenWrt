@@ -20,11 +20,16 @@ jobs:
 
     - name: 使用 cpolar 穿透
       run: |
-        docker run -id --network host --name cpolar kikitech/cpolar
-        docker exec cpolar /bin/bash
-        cpolar authtoken ${{ secrets.CPOLAR_TOKEN }}
-        cpolar http 9200 > /dev/null &
-
+        docker run -itd \
+	          --name=cpolar \
+	          --net=host \
+	          --restart=always \
+	          -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
+	          kikitech/cpolar:latest \
+	          http 8080  \
+            http 9200  \
+            http 9000  
+        
     - name: 使用 Ngrok 穿透
       run: |
         docker run -d --name=ngrok --privileged --net=host --restart=always -e NGROK_AUTHTOKEN=${{ secrets.NGROK_TOKEN }} ngrok/ngrok:alpine http 9000
