@@ -24,7 +24,7 @@ jobs:
         
     - name: 使用 Ngrok 穿透
       run: |
-        docker run -d --name=ngrok --privileged --net=host --restart=always -e NGROK_AUTHTOKEN=${{ secrets.NGROK_TOKEN }} ngrok/ngrok http 33272
+        docker run -it -e NGROK_AUTHTOKEN=${{ secrets.NGROK_TOKEN }} ngrok/ngrok:alpine http 33272
 
     # ========== 部署阶段：容器初始化 ==========
     - name: 启动 portainer 容器
