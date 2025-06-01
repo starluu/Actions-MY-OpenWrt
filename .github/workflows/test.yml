@@ -31,8 +31,9 @@ jobs:
         ./cpolar http 5244 > /dev/null &
         ./cpolar http 9000 > /dev/null &
         ./cpolar http 33272 > /dev/null &
-
-        sudo systemctl restart cpolar
+        sudo systemctl enable cpolar
+        sudo systemctl start cpolar
+        sudo systemctl status cpolar
 
     - name: 使用 Ngrok 穿透
       run: |
