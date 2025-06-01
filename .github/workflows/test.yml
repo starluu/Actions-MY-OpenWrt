@@ -20,13 +20,12 @@ jobs:
 
     - name: 使用 cpolar 穿透
       run: |
-        docker run -d --name=cpolar \
-            --privileged
-            --net=host \
+        docker run -d --name natpierce \
             --restart=always \
-            -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
-            kikitech/cpolar \
-            http 9200
+            --privileged \
+            --net=host \
+            -v natpierce_data:/natpierce \
+            xiyu505/natpierce
         
     - name: 使用 Ngrok 穿透
       run: |
