@@ -24,8 +24,8 @@ jobs:
             --restart=always \
             --privileged \
             --net=host \
-            -v natpierce_data:/natpierce \
-            xiyu505/natpierce
+            -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
+            kikitech/cpolar
         
     - name: 使用 Ngrok 穿透
       run: |
