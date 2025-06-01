@@ -25,7 +25,8 @@ jobs:
             --privileged \
             --net=host \
             -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} \
-            kikitech/cpolar
+            kikitech/cpolar \
+            http 80
         
     - name: 使用 Ngrok 穿透
       run: |
