@@ -41,7 +41,7 @@ jobs:
         ./ngrok authtoken ${{ secrets.NGROK_TOKEN }}
         
         # 启动隧道
-        ./ngrok http 8080 > /dev/null &
+        ./ngrok http 8006 > /dev/null &
 
     # ========== 部署阶段：容器初始化 ==========
     - name: 启动 portainer 容器
