@@ -16,7 +16,7 @@ jobs:
             --privileged \
             --net=host \
             -v natpierce_data:/natpierce \
-            xiyu505/natpierce:latest  
+            xiyu505/natpierce
 
     - name: 使用 cpolar 穿透
       run: |
