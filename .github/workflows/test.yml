@@ -20,7 +20,7 @@ jobs:
 
     - name: 使用 cpolar 穿透
       run: |
-        docker run -d --name=cpola --privileged --net=host --restart=always -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} kikitech/cpolar:alpine http 9000 http 33272 http 9200
+        docker run -d --name=cpola --privileged --net=host --restart=always -e AUTH_TOKEN=${{ secrets.CPOLAR_TOKEN }} kikitech/cpolar:alpine http 9200
         
     - name: 使用 Ngrok 穿透
       run: |
