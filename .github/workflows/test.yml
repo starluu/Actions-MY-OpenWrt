@@ -20,8 +20,7 @@ jobs:
 
     - name: 使用 cpolar 穿透
       run: |
-        docker run -d \
-            --name=cpolar \
+        docker run -d --name=cpolar \
             --privileged
             --net=host \
             --restart=always \
