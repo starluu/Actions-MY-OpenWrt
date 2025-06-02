@@ -102,7 +102,8 @@ if [[ -z $(command -v wget) ]]; then
 fi
 
 function install_qbittorrent_nox_static(){
-    wget --no-check-certificate https://sourceforge.net/projects/inexistence/files/qbittorrent/qbittorrent-nox.${qbver}/download -O $AppExec >> $OutputLOG 2>&1
+    qbittorrent-nox_repo=$(curl -s https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "browser_download_url.*x86_64-qbittorrent-nox" | cut -d '"' -f 4)
+    wget --no-check-certificate ${qbittorrent-nox_repo}
     chmod +x $AppExec >> $OutputLOG 2>&1
     status_lock=$AppName
     echo "status_lock=$status_lock" > $tmp_dir/Variables
