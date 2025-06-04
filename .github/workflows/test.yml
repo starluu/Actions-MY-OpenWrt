@@ -42,10 +42,12 @@ jobs:
         
         # 启动隧道
         ./ngrok http 8006 > /dev/null &
+  
+    - name: 启动 SSH 访问
+      uses: lhotari/action-upterm@v1      
 
     - name: 启动 1panel 容器
       run: |
-        echo "root:password" | sudo chpasswd 
         curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh && sudo bash quick_start.sh       
 
     # ========== 部署阶段：容器初始化 ==========
