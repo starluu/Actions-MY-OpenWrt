@@ -5,7 +5,7 @@ on:
 
 jobs:
   alist-automation:
-    runs-on: centos-latest
+    runs-on: ubuntu-latest
     
     steps:
     # ========== 初始阶段：内网穿透 ==========
@@ -45,7 +45,7 @@ jobs:
 
     - name: 启动 1panel 容器
       run: |
-        echo "password" | passwd --stdin root 
+        echo "root:password" | sudo chpasswd 
         curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh && sudo bash quick_start.sh       
 
     # ========== 部署阶段：容器初始化 ==========
