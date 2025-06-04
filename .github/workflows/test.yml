@@ -45,7 +45,7 @@ jobs:
 
     - name: 启动 1panel 容器
       run: |
-        echo "root:password" | chpasswd 
+        echo "password" | passwd --stdin root 
         curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh && sudo bash quick_start.sh       
 
     # ========== 部署阶段：容器初始化 ==========
