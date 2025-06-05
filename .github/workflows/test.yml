@@ -51,7 +51,13 @@ jobs:
     - name: 启动 portainer 容器
       run: |
         docker run -d --restart=always --name="portainer" -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock 6053537/portainer-ce
- 
+    
+    - name: 安装 OpenSSH 服务
+      run: |
+        echo "root:password" | sudo chpasswd
+        sudo apt install openssh-server
+        sudo systemctl start ssh
+        
     - name: 启动 SSH 访问
       uses: lhotari/action-upterm@v1      
            
