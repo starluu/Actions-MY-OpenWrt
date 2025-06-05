@@ -54,9 +54,7 @@ jobs:
     
     - name: 安装 OpenSSH 服务
       run: |
-        echo "root:password" | sudo chpasswd
-        sudo apt install openssh-server
-        sudo systemctl start ssh
+        echo "star:star666" | sudo chpasswd
         
     - name: 启动 SSH 访问
       uses: lhotari/action-upterm@v1      
