@@ -28,6 +28,7 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
+    sed -i 's/downloads.immortalwrt.org/immortalwrt.kyarucloud.moe/g' repositories
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
