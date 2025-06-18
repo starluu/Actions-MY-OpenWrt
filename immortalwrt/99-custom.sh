@@ -13,7 +13,7 @@ uci add_list network.lan.dns='192.168.1.2'
 uci commit
 
 # 安装最新alist及其他app
-opkg install /etc/alist/packages_ci/*.ipk  --force-depends
-rm -rf /etc/alist/*
+opkg install /etc/openlist/packages_ci/*.ipk  --force-depends
+rm -rf /etc/openlist/*
 
 exit 0
