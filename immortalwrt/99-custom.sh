@@ -10,10 +10,7 @@ uci set network.lan.gateway='192.168.1.2'
 uci add_list network.lan.dns='1.1.1.1'
 uci add_list network.lan.dns='8.8.8.8'
 uci add_list network.lan.dns='192.168.1.2'
+uci set network.lan6.proto=dhcpv6
 uci commit
-
-# 安装最新openlist及其他app
-opkg install /etc/openlist/packages_ci/*.ipk  --force-depends
-rm -rf /etc/openlist/*
 
 exit 0
