@@ -12,6 +12,8 @@ uci add_list network.lan.dns='8.8.8.8'
 uci add_list network.lan.dns='192.168.1.2'
 uci set network.lan6=interface
 uci set network.lan6.proto='dhcpv6'
+uci delete network.wan
+uci delete network.wan6
 uci commit
 
 exit 0
