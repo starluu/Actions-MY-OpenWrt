@@ -8,12 +8,13 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/generic/immortalwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
+openlist_repo=$(curl -s https://api.github.com/repos/sbwml/luci-app-openlist/releases/latest | grep "browser_download_url.*SNAPSHOT-i386_pentium4.tar.gz" | cut -d '"' -f 4)
 
 # config package
 unused_packages="-luci-app-cpufreq"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-i18n-argon-config-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
-my_packages="${default_luci} luci-i18n-alist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn ${driver_packages} ${unused_packages}"
+my_packages="${default_luci} luci-i18n-openlist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
@@ -29,6 +30,11 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     sed -i 's/downloads.immortalwrt.org/immortalwrt.kyarucloud.moe/g' repositories
+    wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/immortalwrt/99-custom.sh
+    wget -P packages ${openlist_repo}
+    cd ./packages
+    tar -xvzf SNAPSHOT-i386_pentium4.tar.gz && rm -f SNAPSHOT-i386_pentium4.tar.gz
+    cd ${imagebuilder_path}    
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
