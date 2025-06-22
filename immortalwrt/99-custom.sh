@@ -14,6 +14,6 @@ uci set network.lan6.proto='dhcpv6'
 uci commit
 
 # 修改源地址
-sed -i 's|downloads.immortalwrt.org|mirrors.shanghaitech.edu.cn/immortalwrt|g' /etc/apk/repositories.d
+sed -i 's|downloads.immortalwrt.org|mirrors.shanghaitech.edu.cn/immortalwrt|g' /etc/apk/repositories.d/distfeeds.list
 
 exit 0
