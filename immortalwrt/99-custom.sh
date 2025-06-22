@@ -4,7 +4,7 @@ etc#!/bin/sh
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
-# 修改网关地址
+# 修改网关DNS
 uci set network.lan.gateway='192.168.1.2'
 uci add_list network.lan.dns='1.1.1.1'
 uci add_list network.lan.dns='8.8.8.8'
