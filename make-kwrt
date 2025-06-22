@@ -8,13 +8,12 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/generic/kwrt-imagebuilder-x86-generic.Linux-x86_64.tar.zst"
-openlist_repo=$(curl -s https://api.github.com/repos/sbwml/luci-app-openlist/releases/latest | grep "browser_download_url.*openwrt-24.10-i386_pentium4.tar.gz" | cut -d '"' -f 4)
 
 # config package
 unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-log-viewer -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard"
 driver_packages=""
 default_luci="luci luci-app-argon-config"
-my_packages="luci-i18n-openlist-zh-cn luci-app-passwall naiveproxy luci-app-aria2 luci-app-samba4 luci-app-vsftpd"
+my_packages="luci-app-openlist luci-app-passwall naiveproxy luci-app-aria2 luci-app-samba4 luci-app-vsftpd"
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
@@ -34,8 +33,6 @@ build_firmware () {
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
     sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
     sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
-    wget ${openlist_repo}
-    tar -xvzf openwrt-24.10-i386_pentium4.tar.gz --strip-components=1 -C packages && rm -f openwrt-24.10-i386_pentium4.tar.gz
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
