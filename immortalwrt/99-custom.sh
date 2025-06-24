@@ -16,6 +16,6 @@ uci set system.@system[0].zonename='Asia/Shanghai'
 uci commit
 
 # 修改源地址
-sed -i 's|downloads.immortalwrt.org|mirrors.shanghaitech.edu.cn/immortalwrt|g' /etc/apk/repositories.d/distfeeds.list
+sed -i 's|downloads.immortalwrt.org|mirrors.pku.edu.cn/immortalwrt|g' /etc/apk/repositories.d/distfeeds.list
 
 exit 0
