@@ -11,6 +11,7 @@ uci add_list network.lan.dns='8.8.8.8'
 uci add_list network.lan.dns='192.168.1.2'
 uci set network.lan6=interface
 uci set network.lan6.proto='dhcpv6'
+uci set system.@system[0].timezone='CST-8'
 uci set system.@system[0].zonename='Asia/Shanghai'
 uci commit
 
