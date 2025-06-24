@@ -29,7 +29,7 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
-    sed -i 's|downloads.immortalwrt.org|mirror.nju.edu.cn/immortalwrt|g' repositories
+    sed -i 's|https://downloads.immortalwrt.org/snapshots/packages/i386_pentium4/packages/packages.adb|https://downloads.openwrt.org/snapshots/packages/i386_pentium4/packages/packages.adb|g' repositories
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/immortalwrt/99-custom.sh
     wget ${openlist_repo}
     tar -xvzf SNAPSHOT-i386_pentium4.tar.gz --strip-components=1 -C packages && rm -f SNAPSHOT-i386_pentium4.tar.gz
