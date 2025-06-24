@@ -4,13 +4,14 @@ etc#!/bin/sh
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
-# 修改网关DNS
+# 修改网关DNS时区等
 uci set network.lan.gateway='192.168.1.2'
 uci add_list network.lan.dns='1.1.1.1'
 uci add_list network.lan.dns='8.8.8.8'
 uci add_list network.lan.dns='192.168.1.2'
 uci set network.lan6=interface
 uci set network.lan6.proto='dhcpv6'
+uci set system.@system[0].zonename='Asia/Shanghai'
 uci commit
 
 # 修改源地址
