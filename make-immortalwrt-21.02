@@ -8,7 +8,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
 imagebuilder_repo="https://downloads.immortalwrt.org/releases/21.02-SNAPSHOT/targets/x86/generic/immortalwrt-imagebuilder-21.02-SNAPSHOT-x86-generic.Linux-x86_64.tar.xz"
-openlist_repo=$(curl -s https://api.github.com/repos/sbwml/luci-app-openlist/releases/latest | grep "browser_download_url.*openwrt-24.10-i386_pentium4.tar.gz" | cut -d '"' -f 4)
+openlist_repo=$(curl -s https://api.github.com/repos/OpenListTeam/OpenList-OpenWRT/releases/latest | grep "browser_download_url.*openwrt-24.10-i386_pentium4.tar.gz" | cut -d '"' -f 4)
 passwall_repo=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/releases/latest | grep "browser_download_url.*luci-19.07.*.ipk" | cut -d '"' -f 4)
 
 # config package
@@ -32,10 +32,8 @@ build_firmware () {
     cd ${imagebuilder_path}
     wget -P files/etc/opkg https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/immortalwrt/distfeeds.conf
     wget -P files/app/passwall ${passwall_repo}
-    wget -P packages ${openlist_repo}
-    cd ./packages
-    tar -xvzf openwrt-24.10-i386_pentium4.tar.gz && rm -f openwrt-24.10-i386_pentium4.tar.gz
-    cd ${imagebuilder_path}
+    wget ${openlist_repo}
+    tar -xvzf openwrt-24.10-i386_pentium4.tar.gz --strip-components=1 -C packages && rm -f openwrt-24.10-i386_pentium4.tar.gz
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
