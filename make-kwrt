@@ -31,8 +31,6 @@ build_firmware () {
     cd ${imagebuilder_path}
     sed -i 's|file://www/wwwroot/|https://|g' repositories.conf
     wget -P files/etc/uci-defaults https://github.com/starluu/Actions-MY-OpenWrt/raw/refs/heads/main/kwrt/99-custom.sh
-    sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
-    sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
