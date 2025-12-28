@@ -5,13 +5,19 @@ LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
 # 多网口设备 支持修改为别的ip地址
-uci set network.lan.ipaddr='192.168.1.6'
+uci set network.lan.ipaddr='192.168.1.6/24'
+uci set network.lan.gateway='192.168.1.2'
+uci add_list network.lan.dns='1.1.1.1'
+uci add_list network.lan.dns='8.8.8.8'
+uci add_list network.lan.dns='192.168.1.2'
+uci set network.lan6=interface
+uci set network.lan6.proto='dhcpv6'
 uci commit
 
 # 删除作者广告信息
 rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 
 # 卸载顽固预装软件
-opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
+opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp luci-app-attendedsysupgrade 
 
 exit 0
