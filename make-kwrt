@@ -7,7 +7,7 @@ openwrt_dir="openwrt"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
-imagebuilder_repo="https://dl.openwrt.ai/releases/24.10/targets/x86/64/kwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+imagebuilder_repo="https://dl.openwrt.ai/releases/25.12/targets/x86/64/kwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
 
 # config package
 unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-log-viewer -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard"
