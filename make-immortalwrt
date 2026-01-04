@@ -10,7 +10,7 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
 
 # config package
-unused_packages="-luci-app-cpufreq"
+unused_packages="-luci-app-cpufreq -luci-app-attendedsysupgrade -attendedsysupgrade-common"
 driver_packages=""
 default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-i18n-argon-config-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
 my_packages="${default_luci} luci-i18n-homeproxy-zh-cn luci-i18n-openlist-zh-cn luci-i18n-aria2-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-diskman-zh-cn ${driver_packages} ${unused_packages}"
