@@ -18,7 +18,4 @@ uci commit
 # 修改源地址
 sed -i 's|downloads.immortalwrt.org|mirrors.shanghaitech.edu.cn/immortalwrt|g' /etc/apk/repositories.d/distfeeds.list
 
-# 卸载顽固预装软件
-apk del luci-app-attendedsysupgrade
-
 exit 0
