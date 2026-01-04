@@ -18,6 +18,6 @@ uci commit
 rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
 
 # 卸载顽固预装软件
-opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp luci-app-attendedsysupgrade 
+opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
 
 exit 0
