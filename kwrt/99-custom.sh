@@ -14,8 +14,10 @@ uci set network.lan6=interface
 uci set network.lan6.proto='dhcpv6'
 uci commit
 
-# 安装luci
-opkg update
-opkg install luci-light
+# 删除作者广告信息
+rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
+
+# 卸载顽固预装软件
+opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp luci-app-attendedsysupgrade
 
 exit 0
