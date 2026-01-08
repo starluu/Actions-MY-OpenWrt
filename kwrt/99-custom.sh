@@ -14,10 +14,4 @@ uci set network.lan6=interface
 uci set network.lan6.proto='dhcpv6'
 uci commit
 
-# 删除作者广告信息
-rm -rf /usr/lib/lua/luci/view/admin_status/index/links.htm
-
-# 卸载顽固预装软件
-opkg --force-removal-of-dependent-packages --autoremove remove luci-app-partexp
-
 exit 0
