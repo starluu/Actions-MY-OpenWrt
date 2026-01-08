@@ -14,4 +14,8 @@ uci set network.lan6=interface
 uci set network.lan6.proto='dhcpv6'
 uci commit
 
+# 安装luci
+opkg update
+opkg install luci-light
+
 exit 0
