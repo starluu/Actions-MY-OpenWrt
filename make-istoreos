@@ -1,0 +1,38 @@
+#!/bin/sh
+#==========================================================
+
+# config path
+make_path="$(pwd)"
+openwrt_dir="openwrt"
+imagebuilder_path="${make_path}/${openwrt_dir}"
+
+# config repo
+imagebuilder_repo="https://fw0.koolcenter.com/iStoreOS/ib/x86_64/istoreos-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+
+# config package
+unused_packages=""
+driver_packages=""
+default_luci=""
+my_packages="${default_luci} ${driver_packages} ${unused_packages}"
+
+error_msg() {
+    echo -e "${ERROR} ${1}"
+    exit 1
+}
+
+download_imagebuilder () {
+    wget ${imagebuilder_repo} || error_msg
+    tar -I zstd -xvf immortalwrt-imagebuilder-* && rm -f immortalwrt-imagebuilder-*.tar.zst
+    mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
+}
+
+build_firmware () {
+    cd ${imagebuilder_path}
+    make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
+    echo "success..."
+}
+
+download_imagebuilder
+build_firmware
+
+exit 0
