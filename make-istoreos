@@ -12,8 +12,8 @@ imagebuilder_repo="https://fw0.koolcenter.com/iStoreOS/ib/x86_64/istoreos-imageb
 # config package
 unused_packages=""
 driver_packages=""
-default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn"
-my_packages="${default_luci} ${driver_packages} ${unused_packages}"
+default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat"
+my_packages="${default_luci} dockerd docker-compose ${driver_packages} ${unused_packages}"
 
 error_msg() {
     echo -e "${ERROR} ${1}"
