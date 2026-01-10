@@ -12,7 +12,7 @@ imagebuilder_repo="https://fw0.koolcenter.com/iStoreOS/ib/x86_64/istoreos-imageb
 # config package
 unused_packages=""
 driver_packages=""
-default_luci=""
+default_luci="luci"
 my_packages="${default_luci} ${driver_packages} ${unused_packages}"
 
 error_msg() {
@@ -28,6 +28,8 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
+    sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
+    sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
     make image PROFILE="generic" PACKAGES="${my_packages}" FILES="files" || error_msg
     echo "success..."
 }
