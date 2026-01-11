@@ -13,7 +13,7 @@ imagebuilder_repo="https://dl.openwrt.ai/releases/25.12/targets/x86/64/kwrt-imag
 unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard"
 driver_packages=""
 default_luci="luci luci-app-argon-config"
-my_packages="luci-app-openlist2 luci-app-clouddrive2 luci-app-aria2 luci-app-thunder luci-app-samba4 luci-app-nikki"
+my_packages="luci-app-openlist2 luci-app-clouddrive2 luci-app-aria2 luci-app-thunder luci-app-samba4 luci-app-nikki luci-app-gpsysupgrade"
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
