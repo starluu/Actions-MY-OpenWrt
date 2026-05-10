@@ -23,8 +23,8 @@ error_msg() {
 
 download_imagebuilder () {
     wget ${imagebuilder_repo} || error_msg
-    tar -I zstd -xvf kwrt-imagebuilder-* && rm -f kwrt-imagebuilder-*.tar.zst
-    mv -f kwrt-imagebuilder-* ${openwrt_dir}
+    tar -I zstd -xvf istoreos-imagebuilder-* && rm -f istoreos-imagebuilder-*.tar.zst
+    mv -f istoreos-imagebuilder-* ${openwrt_dir}
 }
 
 build_firmware () {
