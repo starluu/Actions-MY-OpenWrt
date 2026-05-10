@@ -1,0 +1,31 @@
+name: Kwrt_ImageBuilder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main       
+
+      - name: Run make-kwrt
+        run: |
+          sudo apt update
+          sudo apt install qemu-utils mkisofs
+          sudo chmod +x make-kwrt
+          sudo ./make-kwrt
+          sudo timedatectl set-timezone Asia/Shanghai
+          echo "BUILD_TAG=Kwrt-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
+      
+      - name: Upload OpenWrt Firmware to Release
+        uses: ncipollo/release-action@main
+        if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+        with:
+          tag: ${{ env.BUILD_TAG }}
+          artifacts: "openwrt/bin/targets/x86/64/*"
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
