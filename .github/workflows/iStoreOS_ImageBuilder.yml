@@ -19,7 +19,7 @@ jobs:
           sudo chmod +x make-istoreos
           sudo ./make-istoreos
           sudo timedatectl set-timezone Asia/Shanghai
-          echo "BUILD_TAG=Kwrt-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
+          echo "BUILD_TAG=iStoreOS-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
       
       - name: Upload OpenWrt Firmware to Release
         uses: ncipollo/release-action@main
