@@ -1,0 +1,43 @@
+#!/bin/sh
+#==========================================================
+
+# config path
+make_path="$(pwd)"
+openwrt_dir="openwrt"
+imagebuilder_path="${make_path}/${openwrt_dir}"
+
+# config repo
+imagebuilder_repo="https://dl.openwrt.ai/releases/25.12/targets/x86/64/kwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+
+# config package
+unused_packages="-luci-app-advancedplus -luci-app-fan -luci-app-filemanager -luci-app-syscontrol -luci-app-upnp -luci-app-wizard -luci-proto-wireguard"
+driver_packages=""
+default_luci="luci luci-app-argon-config"
+my_packages="luci-app-openlist2 luci-app-clouddrive2 luci-app-aria2 luci-app-thunder luci-app-samba4 luci-app-nikki luci-app-ikoolproxy"
+all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
+
+error_msg() {
+    echo -e "${ERROR} ${1}"
+    exit 1
+}
+
+download_imagebuilder () {
+    wget ${imagebuilder_repo} || error_msg
+    tar -I zstd -xvf kwrt-imagebuilder-* && rm -f kwrt-imagebuilder-*.tar.zst
+    mv -f kwrt-imagebuilder-* ${openwrt_dir}
+}
+
+build_firmware () {
+    cd ${imagebuilder_path}
+    sed -i 's|file://www/wwwroot/|https://|g' repositories.conf
+    sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
+    sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
+    wget -P files/etc/uci-defaults https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/main/kwrt/99-custom.sh
+    make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
+    echo "success..."
+}
+
+download_imagebuilder
+build_firmware
+
+exit 0
