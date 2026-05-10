@@ -12,7 +12,7 @@ imagebuilder_repo="https://fw0.koolcenter.com/iStoreOS/ib/x86_64/istoreos-imageb
 # config package
 unused_packages=""
 driver_packages=""
-default_luci="luci luci-app-argon-config"
+default_luci=""
 my_packages=""
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
@@ -31,7 +31,6 @@ build_firmware () {
     cd ${imagebuilder_path}
     sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
     sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
-    wget -P files/etc/uci-defaults https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/main/istoreos/99-custom.sh
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
