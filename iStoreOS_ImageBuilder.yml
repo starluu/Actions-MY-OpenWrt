@@ -1,4 +1,4 @@
-name: Kwrt_ImageBuilder
+name: iStoreOS_ImageBuilder
 
 on:
   workflow_dispatch:
@@ -12,12 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main       
 
-      - name: Run make-kwrt
+      - name: Run make-istoreos
         run: |
           sudo apt update
           sudo apt install qemu-utils mkisofs
-          sudo chmod +x make-kwrt
-          sudo ./make-kwrt
+          sudo chmod +x make-istoreos
+          sudo ./make-istoreos
           sudo timedatectl set-timezone Asia/Shanghai
           echo "BUILD_TAG=Kwrt-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
       
