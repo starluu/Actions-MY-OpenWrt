@@ -33,7 +33,7 @@ build_firmware () {
     cd ${imagebuilder_path}
     sed -i 's/# KERNEL_PARTSIZE=16/KERNEL_PARTSIZE=1024/g' .config
     sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
-    sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
+    sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
     wget -P files/etc/uci-defaults https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/main/istoreos/99-custom.sh
     wget -P packages ${diskman_repo}
     wget -P packages ${argon_repo}
