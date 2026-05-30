@@ -1,4 +1,4 @@
-name: ImmortalWrt_ImageBuilder
+name: OpenWrt_ImageBuilder
 
 on:
   workflow_dispatch:
@@ -12,12 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main       
 
-      - name: Run make-immortalwrt
+      - name: Run make-openwrt
         run: |
           sudo apt update
           sudo apt install qemu-utils mkisofs
-          sudo chmod +x make-immortalwrt
-          sudo ./make-immortalwrt
+          sudo chmod +x make-openwrt
+          sudo ./make-openwrt
           sudo timedatectl set-timezone Asia/Shanghai
           echo "BUILD_TAG=ImmortalWrt-x86_$(date +"%Y.%m.%d")" >> ${GITHUB_ENV}          
       
