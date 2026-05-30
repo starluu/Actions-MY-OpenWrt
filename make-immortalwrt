@@ -12,8 +12,8 @@ imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/64/im
 # config package
 unused_packages=""
 driver_packages=""
-default_luci="luci-light"
-my_packages="luci-i18n-samba4-zh-cn luci-i18n-diskman-zh-cn luci-i18n-openlist-zh-cn luci-i18n-argon-config-zh-cn"
+default_luci="luci-light luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
+my_packages="luci-i18n-aria2-zh-cn luci-i18n-diskman-zh-cn luci-i18n-samba4-zh-cn luci-i18n-vsftpd-zh-cn luci-i18n-homeproxy-zh-cn luci-i18n-openlist-zh-cn luci-i18n-argon-config-zh-cn"
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
@@ -30,6 +30,7 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     wget -P packages https://downloads.immortalwrt.org/snapshots/packages/x86_64/packages/packages.adb
+    wget -P base https://downloads.immortalwrt.org/snapshots/packages/x86_64/base/libblobmsg-json20260523-2026.05.23~1fe93d2f-r1.apk
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
