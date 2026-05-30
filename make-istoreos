@@ -7,13 +7,14 @@ openwrt_dir="openwrt"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
-imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+imagebuilder_repo="https://fw.koolcenter.com/iStoreOS/ib/x86_64/istoreos-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+openlist_repo=$(curl -s https://api.github.com/repos/OpenListTeam/OpenList-OpenWRT/releases/latest | grep "browser_download_url.*openwrt-24.10-x86_64.tar.gz" | cut -d '"' -f 4)
 
 # config package
-unused_packages=""
+unused_packages="-luci-app-store"
 driver_packages=""
-default_luci="luci"
-my_packages="luci-i18n-samba4-zh-cn luci-i18n-diskman-zh-cn luci-i18n-argon-config-zh-cn"
+default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
+my_packages="luci-i18n-samba4-zh-cn luci-i18n-diskman-zh-cn luci-i18n-openlist-zh-cn luci-i18n-argon-config-zh-cn"
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
@@ -23,8 +24,8 @@ error_msg() {
 
 download_imagebuilder () {
     wget ${imagebuilder_repo} || error_msg
-    tar -I zstd -xvf immortalwrt-imagebuilder-* && rm -f immortalwrt-imagebuilder-*.tar.zst
-    mv -f immortalwrt-imagebuilder-* ${openwrt_dir}
+    tar -I zstd -xvf istoreos-imagebuilder-* && rm -f istoreos-imagebuilder-*.tar.zst
+    mv -f istoreos-imagebuilder-* ${openwrt_dir}
 }
 
 build_firmware () {
@@ -32,6 +33,10 @@ build_firmware () {
     sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
     sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
     wget -P files/etc/uci-defaults https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/main/istoreos/99-custom.sh
+    wget -P packages ${openlist_repo}
+    cd ./packages
+    tar -xvzf openwrt-24.10-x86_64.tar.gz && rm -f openwrt-24.10-x86_64.tar.gz
+    cd ${imagebuilder_path} 
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
