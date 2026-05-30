@@ -30,7 +30,8 @@ download_imagebuilder () {
 build_firmware () {
     cd ${imagebuilder_path}
     wget -P packages https://downloads.immortalwrt.org/snapshots/packages/x86_64/packages/packages.adb
-    wget -P packages https://downloads.immortalwrt.org/snapshots/packages/x86_64/base/libblobmsg-json20260523-2026.05.23~1fe93d2f-r1.apk
+    wget -P base https://downloads.immortalwrt.org/snapshots/packages/x86_64/base/libubox20260523-2026.05.23~1fe93d2f-r1.apk
+    wget -P base https://downloads.immortalwrt.org/snapshots/packages/x86_64/base/libblobmsg-json20260523-2026.05.23~1fe93d2f-r1.apk
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
