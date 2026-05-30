@@ -7,10 +7,10 @@ openwrt_dir="openwrt"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 
 # config repo
-imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
+imagebuilder_repo="https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
 
 # config package
-unused_packages="-block-mount"
+unused_packages=""
 driver_packages=""
 default_luci="luci-light luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
 my_packages=""
@@ -29,7 +29,6 @@ download_imagebuilder () {
 
 build_firmware () {
     cd ${imagebuilder_path}
-    wget -P packages https://downloads.immortalwrt.org/snapshots/packages/x86_64/packages/packages.adb
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
