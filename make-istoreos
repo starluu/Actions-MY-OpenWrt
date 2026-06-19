@@ -34,6 +34,7 @@ build_firmware () {
     sed -i 's/# CONFIG_VHDX_IMAGES is not set/CONFIG_VHDX_IMAGES=y/g' .config
     sed -i 's/# CONFIG_VMDK_IMAGES is not set/CONFIG_VMDK_IMAGES=y/g' .config
     wget -P files/etc/uci-defaults https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/main/istoreos/99-custom.sh
+    wget -P packages https://downloads.openwrt.org/releases/packages-24.10/x86_64/packages/yq_4.45.1-r1_x86_64.ipk
     wget ${openlist_repo}
     wget ${nikki_repo}
     tar -xvzf openwrt-24.10-x86_64.tar.gz --strip-components=1 -C packages && rm -f openwrt-24.10-x86_64.tar.gz
