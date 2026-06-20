@@ -12,8 +12,8 @@ imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/64/im
 # config package
 unused_packages=""
 driver_packages=""
-default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
-my_packages=""
+default_luci="luci luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-i18n-argon-config-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
+my_packages="luci-i18n-aria2-zh-cn luci-i18n-diskman-zh-cn luci-i18n-samba4-zh-cn"
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
