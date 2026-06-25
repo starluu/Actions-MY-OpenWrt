@@ -10,12 +10,13 @@ imagebuilder_path="${make_path}/${openwrt_dir}"
 imagebuilder_repo="https://downloads.immortalwrt.org/snapshots/targets/x86/64/immortalwrt-imagebuilder-x86-64.Linux-x86_64.tar.zst"
 openlist_repo=$(curl -s https://api.github.com/repos/sbwml/luci-app-openlist2/releases/latest | grep "browser_download_url.*openwrt-25.12-x86_64.tar.gz" | cut -d '"' -f 4)
 nikki_repo=$(curl -s https://api.github.com/repos/nikkinikki-org/OpenWrt-nikki/releases/latest | grep "browser_download_url.*nikki_x86_64-SNAPSHOT.tar.gz" | cut -d '"' -f 4)
+clouddrive2_repo=$(curl -s https://api.github.com/repos/xuanranran/openwrt-clouddrive2/releases/latest | grep "browser_download_url.*clouddrive2-x86_64-SNAPSHOT.tar.gz" | cut -d '"' -f 4)
 
 # config package
 unused_packages=""
 driver_packages=""
 default_luci="luci-light luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-package-manager-zh-cn luci-i18n-argon-config-zh-cn luci-compat luci-lib-base luci-lib-ipkg libopenssl-legacy"
-my_packages="luci-i18n-aria2-zh-cn luci-i18n-diskman-zh-cn luci-i18n-samba4-zh-cn luci-i18n-openlist2-zh-cn luci-i18n-nikki-zh-cn"
+my_packages="luci-i18n-aria2-zh-cn luci-i18n-diskman-zh-cn luci-i18n-samba4-zh-cn luci-i18n-openlist2-zh-cn luci-i18n-nikki-zh-cn luci-i18n-clouddrive2-zh-cn"
 all_packages="${default_luci} ${my_packages} ${driver_packages} ${unused_packages}"
 
 error_msg() {
@@ -34,8 +35,10 @@ build_firmware () {
     wget -P files/etc/uci-defaults https://raw.githubusercontent.com/starluu/Actions-MY-OpenWrt/main/immortalwrt/99-custom.sh
     wget ${openlist_repo}
     wget ${nikki_repo}
+    wget ${clouddrive2_repo}
     tar -xvzf openwrt-25.12-x86_64.tar.gz --strip-components=1 -C packages && rm -f openwrt-25.12-x86_64.tar.gz
     tar -xvzf nikki_x86_64-SNAPSHOT.tar.gz -C packages && rm -f nikki_x86_64-SNAPSHOT.tar.gz
+    tar -xvzf clouddrive2-x86_64-SNAPSHOT.tar.gz -C packages && rm -f clouddrive2-x86_64-SNAPSHOT.tar.gz
     make image PROFILE="generic" PACKAGES="${all_packages}" FILES="files" || error_msg
     echo "success..."
 }
